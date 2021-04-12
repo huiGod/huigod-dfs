@@ -1,7 +1,0 @@
-syntax = "proto3";
-option java_package = "org.huigod.entity";
-option java_outer_classname = "RegisterResponse";
-
-message RegisterResponseMessage{
-  int32 status = 1;
-}

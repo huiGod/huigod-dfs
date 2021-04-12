@@ -1,8 +1,0 @@
-syntax = "proto3";
-option java_package = "org.huigod.entity";
-option java_outer_classname = "HeartbeatRequest";
-
-message HeartbeatRequestMessage {
-  string ip = 1;
-  string home = 2;
-}

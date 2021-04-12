@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.huigod.namenode.rpc;
+
+option java_multiple_files = true;
+option java_package = "com.huigod.namenode.rpc.model";
+option java_outer_classname = "NameNodeRpcModel";
+
+message RegisterRequest {
+  string ip = 1;
+  string home = 2;
+}
+
+message RegisterResponse {
+  int32 statue = 1;
+}
+
+message HeartbeatRequest {
+  string ip = 1;
+  string home = 2;
+}
+
+message HeartbeatResponse {
+  int32 statue = 1;
+}

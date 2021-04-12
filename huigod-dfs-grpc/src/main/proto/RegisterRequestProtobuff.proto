@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "org.huigod.entity";
+option java_outer_classname = "RegisterRequest";
+
+message RegisterRequestMessage {
+  string ip = 1;
+  string hostname = 2;
+}

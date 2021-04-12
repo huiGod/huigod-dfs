@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "org.huigod.entity";
+option java_outer_classname = "MkdirResponse";
+
+message MkdirResponseMessage{
+
+  int32 status = 1;
+}

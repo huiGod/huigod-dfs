@@ -1,0 +1,3 @@
+# Project exclude paths
+/huigod-dfs-grpc/target/
+.idea

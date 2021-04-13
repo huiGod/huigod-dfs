@@ -20,14 +20,14 @@ public interface RegisterRequestOrBuilder extends
       getIpBytes();
 
   /**
-   * <code>string home = 2;</code>
-   * @return The home.
+   * <code>string hostName = 2;</code>
+   * @return The hostName.
    */
-  String getHome();
+  String getHostName();
   /**
-   * <code>string home = 2;</code>
-   * @return The bytes for home.
+   * <code>string hostName = 2;</code>
+   * @return The bytes for hostName.
    */
   com.google.protobuf.ByteString
-      getHomeBytes();
+      getHostNameBytes();
 }

@@ -50,7 +50,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            statue_ = input.readInt32();
+            status_ = input.readInt32();
             break;
           }
           default: {
@@ -82,17 +82,17 @@ private static final long serialVersionUID = 0L;
       internalGetFieldAccessorTable() {
     return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_HeartbeatResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HeartbeatResponse.class, HeartbeatResponse.Builder.class);
+            HeartbeatResponse.class, Builder.class);
   }
 
-  public static final int STATUE_FIELD_NUMBER = 1;
-  private int statue_;
+  public static final int STATUS_FIELD_NUMBER = 1;
+  private int status_;
   /**
-   * <code>int32 statue = 1;</code>
-   * @return The statue.
+   * <code>int32 status = 1;</code>
+   * @return The status.
    */
-  public int getStatue() {
-    return statue_;
+  public int getStatus() {
+    return status_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -109,8 +109,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (statue_ != 0) {
-      output.writeInt32(1, statue_);
+    if (status_ != 0) {
+      output.writeInt32(1, status_);
     }
     unknownFields.writeTo(output);
   }
@@ -121,9 +121,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (statue_ != 0) {
+    if (status_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, statue_);
+        .computeInt32Size(1, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -140,8 +140,8 @@ private static final long serialVersionUID = 0L;
     }
     HeartbeatResponse other = (HeartbeatResponse) obj;
 
-    if (getStatue()
-        != other.getStatue()) return false;
+    if (getStatus()
+        != other.getStatus()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -153,8 +153,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + STATUE_FIELD_NUMBER;
-    hash = (53 * hash) + getStatue();
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getStatus();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -267,7 +267,7 @@ private static final long serialVersionUID = 0L;
         internalGetFieldAccessorTable() {
       return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_HeartbeatResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HeartbeatResponse.class, HeartbeatResponse.Builder.class);
+              HeartbeatResponse.class, Builder.class);
     }
 
     // Construct using com.huigod.namenode.rpc.model.HeartbeatResponse.newBuilder()
@@ -288,7 +288,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      statue_ = 0;
+      status_ = 0;
 
       return this;
     }
@@ -316,7 +316,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public HeartbeatResponse buildPartial() {
       HeartbeatResponse result = new HeartbeatResponse(this);
-      result.statue_ = statue_;
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -365,8 +365,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(HeartbeatResponse other) {
       if (other == HeartbeatResponse.getDefaultInstance()) return this;
-      if (other.getStatue() != 0) {
-        setStatue(other.getStatue());
+      if (other.getStatus() != 0) {
+        setStatus(other.getStatus());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -397,32 +397,32 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int statue_ ;
+    private int status_ ;
     /**
-     * <code>int32 statue = 1;</code>
-     * @return The statue.
+     * <code>int32 status = 1;</code>
+     * @return The status.
      */
-    public int getStatue() {
-      return statue_;
+    public int getStatus() {
+      return status_;
     }
     /**
-     * <code>int32 statue = 1;</code>
-     * @param value The statue to set.
+     * <code>int32 status = 1;</code>
+     * @param value The status to set.
      * @return This builder for chaining.
      */
-    public Builder setStatue(int value) {
-
-      statue_ = value;
+    public Builder setStatus(int value) {
+      
+      status_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 statue = 1;</code>
+     * <code>int32 status = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearStatue() {
-
-      statue_ = 0;
+    public Builder clearStatus() {
+      
+      status_ = 0;
       onChanged();
       return this;
     }

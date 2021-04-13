@@ -17,7 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private HeartbeatRequest() {
     ip_ = "";
-    home_ = "";
+    hostName_ = "";
   }
 
   @Override
@@ -59,7 +59,7 @@ private static final long serialVersionUID = 0L;
           case 18: {
             String s = input.readStringRequireUtf8();
 
-            home_ = s;
+            hostName_ = s;
             break;
           }
           default: {
@@ -91,7 +91,7 @@ private static final long serialVersionUID = 0L;
       internalGetFieldAccessorTable() {
     return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_HeartbeatRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HeartbeatRequest.class, HeartbeatRequest.Builder.class);
+            HeartbeatRequest.class, Builder.class);
   }
 
   public static final int IP_FIELD_NUMBER = 1;
@@ -105,7 +105,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       ip_ = s;
@@ -120,7 +120,7 @@ private static final long serialVersionUID = 0L;
       getIpBytes() {
     Object ref = ip_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       ip_ = b;
@@ -130,36 +130,36 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int HOME_FIELD_NUMBER = 2;
-  private volatile Object home_;
+  public static final int HOSTNAME_FIELD_NUMBER = 2;
+  private volatile Object hostName_;
   /**
-   * <code>string home = 2;</code>
-   * @return The home.
+   * <code>string hostName = 2;</code>
+   * @return The hostName.
    */
-  public String getHome() {
-    Object ref = home_;
+  public String getHostName() {
+    Object ref = hostName_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
-      home_ = s;
+      hostName_ = s;
       return s;
     }
   }
   /**
-   * <code>string home = 2;</code>
-   * @return The bytes for home.
+   * <code>string hostName = 2;</code>
+   * @return The bytes for hostName.
    */
   public com.google.protobuf.ByteString
-      getHomeBytes() {
-    Object ref = home_;
+      getHostNameBytes() {
+    Object ref = hostName_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
-      home_ = b;
+      hostName_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -183,8 +183,8 @@ private static final long serialVersionUID = 0L;
     if (!getIpBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
     }
-    if (!getHomeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, home_);
+    if (!getHostNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostName_);
     }
     unknownFields.writeTo(output);
   }
@@ -198,8 +198,8 @@ private static final long serialVersionUID = 0L;
     if (!getIpBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
     }
-    if (!getHomeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, home_);
+    if (!getHostNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostName_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -218,8 +218,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getIp()
         .equals(other.getIp())) return false;
-    if (!getHome()
-        .equals(other.getHome())) return false;
+    if (!getHostName()
+        .equals(other.getHostName())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -233,8 +233,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + IP_FIELD_NUMBER;
     hash = (53 * hash) + getIp().hashCode();
-    hash = (37 * hash) + HOME_FIELD_NUMBER;
-    hash = (53 * hash) + getHome().hashCode();
+    hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getHostName().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -347,7 +347,7 @@ private static final long serialVersionUID = 0L;
         internalGetFieldAccessorTable() {
       return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_HeartbeatRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HeartbeatRequest.class, HeartbeatRequest.Builder.class);
+              HeartbeatRequest.class, Builder.class);
     }
 
     // Construct using com.huigod.namenode.rpc.model.HeartbeatRequest.newBuilder()
@@ -370,7 +370,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       ip_ = "";
 
-      home_ = "";
+      hostName_ = "";
 
       return this;
     }
@@ -399,7 +399,7 @@ private static final long serialVersionUID = 0L;
     public HeartbeatRequest buildPartial() {
       HeartbeatRequest result = new HeartbeatRequest(this);
       result.ip_ = ip_;
-      result.home_ = home_;
+      result.hostName_ = hostName_;
       onBuilt();
       return result;
     }
@@ -452,8 +452,8 @@ private static final long serialVersionUID = 0L;
         ip_ = other.ip_;
         onChanged();
       }
-      if (!other.getHome().isEmpty()) {
-        home_ = other.home_;
+      if (!other.getHostName().isEmpty()) {
+        hostName_ = other.hostName_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -510,7 +510,7 @@ private static final long serialVersionUID = 0L;
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -529,7 +529,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-
+  
       ip_ = value;
       onChanged();
       return this;
@@ -539,7 +539,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearIp() {
-
+      
       ip_ = getDefaultInstance().getIp();
       onChanged();
       return this;
@@ -555,84 +555,84 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+      
       ip_ = value;
       onChanged();
       return this;
     }
 
-    private Object home_ = "";
+    private Object hostName_ = "";
     /**
-     * <code>string home = 2;</code>
-     * @return The home.
+     * <code>string hostName = 2;</code>
+     * @return The hostName.
      */
-    public String getHome() {
-      Object ref = home_;
+    public String getHostName() {
+      Object ref = hostName_;
       if (!(ref instanceof String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
-        home_ = s;
+        hostName_ = s;
         return s;
       } else {
         return (String) ref;
       }
     }
     /**
-     * <code>string home = 2;</code>
-     * @return The bytes for home.
+     * <code>string hostName = 2;</code>
+     * @return The bytes for hostName.
      */
     public com.google.protobuf.ByteString
-        getHomeBytes() {
-      Object ref = home_;
+        getHostNameBytes() {
+      Object ref = hostName_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
-        home_ = b;
+        hostName_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string home = 2;</code>
-     * @param value The home to set.
+     * <code>string hostName = 2;</code>
+     * @param value The hostName to set.
      * @return This builder for chaining.
      */
-    public Builder setHome(
+    public Builder setHostName(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
-
-      home_ = value;
+  
+      hostName_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string home = 2;</code>
+     * <code>string hostName = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearHome() {
-
-      home_ = getDefaultInstance().getHome();
+    public Builder clearHostName() {
+      
+      hostName_ = getDefaultInstance().getHostName();
       onChanged();
       return this;
     }
     /**
-     * <code>string home = 2;</code>
-     * @param value The bytes for home to set.
+     * <code>string hostName = 2;</code>
+     * @param value The bytes for hostName to set.
      * @return This builder for chaining.
      */
-    public Builder setHomeBytes(
+    public Builder setHostNameBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
-      home_ = value;
+      
+      hostName_ = value;
       onChanged();
       return this;
     }

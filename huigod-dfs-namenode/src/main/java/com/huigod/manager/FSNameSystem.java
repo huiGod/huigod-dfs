@@ -3,7 +3,7 @@ package com.huigod.manager;
 /**
  * 负责管理元数据的核心组件
  */
-public class FSNamesystem {
+public class FSNameSystem {
 
   /**
    * 负责管理内存文件目录树的组件
@@ -12,11 +12,11 @@ public class FSNamesystem {
   /**
    * 负责管理edits log写入磁盘的组件
    */
-  private FSEditlog editlog;
+  private FSEditLog editLog;
 
-  public FSNamesystem() {
+  public FSNameSystem() {
     this.directory = new FSDirectory();
-    this.editlog = new FSEditlog();
+    this.editLog = new FSEditLog();
   }
 
   /**
@@ -27,7 +27,7 @@ public class FSNamesystem {
    */
   public Boolean mkdir(String path) throws Exception {
     this.directory.mkdir(path);
-    this.editlog.logEdit("创建了一个目录：" + path);
+    this.editLog.logEdit("创建了一个目录：" + path);
     return true;
   }
 }

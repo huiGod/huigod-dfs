@@ -8,8 +8,8 @@ public interface HeartbeatResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 statue = 1;</code>
-   * @return The statue.
+   * <code>int32 status = 1;</code>
+   * @return The status.
    */
-  int getStatue();
+  int getStatus();
 }

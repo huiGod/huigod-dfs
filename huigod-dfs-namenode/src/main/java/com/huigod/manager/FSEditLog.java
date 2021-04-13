@@ -6,7 +6,7 @@ import com.huigod.entity.EditLog;
 /**
  * 负责管理edits log日志的核心组件
  */
-public class FSEditlog {
+public class FSEditLog {
 
   /**
    * 当前递增到的txid的序号

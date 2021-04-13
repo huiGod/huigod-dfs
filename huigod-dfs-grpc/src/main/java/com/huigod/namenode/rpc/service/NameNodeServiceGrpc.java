@@ -1,10 +1,18 @@
 package com.huigod.namenode.rpc.service;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
+import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
+import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
 import static io.grpc.stub.ClientCalls.blockingUnaryCall;
 import static io.grpc.stub.ClientCalls.futureUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
@@ -83,6 +91,38 @@ public final class NameNodeServiceGrpc {
      return getHeartbeatMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.MkdirRequest,
+      com.huigod.namenode.rpc.model.MkdirResponse> getMkdirMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "mkdir",
+      requestType = com.huigod.namenode.rpc.model.MkdirRequest.class,
+      responseType = com.huigod.namenode.rpc.model.MkdirResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.MkdirRequest,
+      com.huigod.namenode.rpc.model.MkdirResponse> getMkdirMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.MkdirRequest, com.huigod.namenode.rpc.model.MkdirResponse> getMkdirMethod;
+    if ((getMkdirMethod = NameNodeServiceGrpc.getMkdirMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getMkdirMethod = NameNodeServiceGrpc.getMkdirMethod) == null) {
+          NameNodeServiceGrpc.getMkdirMethod = getMkdirMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.MkdirRequest, com.huigod.namenode.rpc.model.MkdirResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "mkdir"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.MkdirRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.MkdirResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("mkdir"))
+                  .build();
+          }
+        }
+     }
+     return getMkdirMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -124,6 +164,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getHeartbeatMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void mkdir(com.huigod.namenode.rpc.model.MkdirRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.MkdirResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getMkdirMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -140,6 +187,13 @@ public final class NameNodeServiceGrpc {
                 com.huigod.namenode.rpc.model.HeartbeatRequest,
                 com.huigod.namenode.rpc.model.HeartbeatResponse>(
                   this, METHODID_HEARTBEAT)))
+          .addMethod(
+            getMkdirMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.MkdirRequest,
+                com.huigod.namenode.rpc.model.MkdirResponse>(
+                  this, METHODID_MKDIR)))
           .build();
     }
   }
@@ -177,6 +231,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getHeartbeatMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void mkdir(com.huigod.namenode.rpc.model.MkdirRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.MkdirResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getMkdirMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -209,6 +271,13 @@ public final class NameNodeServiceGrpc {
     public com.huigod.namenode.rpc.model.HeartbeatResponse heartbeat(com.huigod.namenode.rpc.model.HeartbeatRequest request) {
       return blockingUnaryCall(
           getChannel(), getHeartbeatMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.MkdirResponse mkdir(com.huigod.namenode.rpc.model.MkdirRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getMkdirMethod(), getCallOptions(), request);
     }
   }
 
@@ -245,10 +314,19 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getHeartbeatMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.MkdirResponse> mkdir(
+        com.huigod.namenode.rpc.model.MkdirRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getMkdirMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_HEARTBEAT = 1;
+  private static final int METHODID_MKDIR = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -274,6 +352,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_HEARTBEAT:
           serviceImpl.heartbeat((com.huigod.namenode.rpc.model.HeartbeatRequest) request,
               (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.HeartbeatResponse>) responseObserver);
+          break;
+        case METHODID_MKDIR:
+          serviceImpl.mkdir((com.huigod.namenode.rpc.model.MkdirRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.MkdirResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -338,6 +420,7 @@ public final class NameNodeServiceGrpc {
               .setSchemaDescriptor(new NameNodeServiceFileDescriptorSupplier())
               .addMethod(getRegisterMethod())
               .addMethod(getHeartbeatMethod())
+              .addMethod(getMkdirMethod())
               .build();
         }
       }

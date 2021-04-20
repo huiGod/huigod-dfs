@@ -41,11 +41,11 @@ public class NameNodeRpcServer {
     // 同时绑定好了自己开发的接口
     server = ServerBuilder
         .forPort(DEFAULT_PORT)
-        .addService(new NameNodeServiceImpl(nameSystem,datanodeManager))
+        .addService(new NameNodeServiceImpl(nameSystem, datanodeManager))
         .build()
         .start();
 
-    System.out.println("NameNodeRpcServer启动，监听端口号：" + DEFAULT_PORT);
+    log.info("NameNodeRpcServer启动，监听端口号：{}", DEFAULT_PORT);
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override

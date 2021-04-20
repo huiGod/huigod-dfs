@@ -2,6 +2,9 @@ package com.huigod.entity;
 
 import lombok.Data;
 
+/**
+ * 描述DataNode节点信息
+ */
 @Data
 public class DataNodeInfo {
 

@@ -16,6 +16,7 @@
   <modules>
     <module>huigod-dfs-grpc</module>
     <module>huigod-dfs-namenode</module>
+    <module>huigod-dfs-datanode</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

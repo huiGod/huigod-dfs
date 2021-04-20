@@ -73,7 +73,7 @@ public class DataNodeManager {
 
           if (!MapUtils.isEmpty(dataNodes)) {
             Iterator<DataNodeInfo> dataNodesIterator = dataNodes.values().iterator();
-            DataNodeInfo datanode = null;
+            DataNodeInfo datanode;
             while (dataNodesIterator.hasNext()) {
               datanode = dataNodesIterator.next();
               //超过90S没有更新心跳，判定为宕机并移除

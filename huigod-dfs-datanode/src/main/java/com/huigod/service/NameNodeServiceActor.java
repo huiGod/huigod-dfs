@@ -9,7 +9,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import lombok.extern.log4j.Log4j2;
-import sun.plugin2.main.server.HeartbeatThread;
 
 /**
  * 负责跟一组NameNode中的某一个进行通信的线程组件
@@ -74,7 +73,7 @@ public class NameNodeServiceActor {
             .setHostName(hostname)
             .build();
         RegisterResponse response = nameNode.register(request);
-        log.info("接收到NameNode返回的注册响应：{}" + response.getStatus());
+        log.info("接收到NameNode返回的注册响应：{}" ,response.getStatus());
       } catch (Exception e) {
         e.printStackTrace();
       }

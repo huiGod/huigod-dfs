@@ -2,6 +2,7 @@ package com.huigod.manager;
 
 import com.huigod.service.INode;
 import com.huigod.service.impl.INodeDirectory;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * 负责管理内存中的文件目录树的核心组件
@@ -19,8 +20,6 @@ public class FSDirectory {
 
   /**
    * 创建目录
-   *
-   * @param path
    */
   public void mkdir(String path) {
     // path = /usr/warehouse/hive
@@ -30,32 +29,48 @@ public class FSDirectory {
     // 接着再对“/hive”这个目录创建一个节点挂载上去
 
     synchronized (dirTree) {
-      String[] pathes = path.split("/");
+      String[] paths = path.split("/");
       INodeDirectory parent = dirTree;
 
-      for (String splitedPath : pathes) {
-        if ("".equals(splitedPath.trim())) {
+      for (String splitPath : paths) {
+        if ("".equals(splitPath.trim())) {
           continue;
         }
 
-        INodeDirectory dir = findDirectory(parent, splitedPath);
+        INodeDirectory dir = findDirectory(parent, splitPath);
         if (dir != null) {
           parent = dir;
           continue;
         }
 
-        INodeDirectory child = new INodeDirectory(splitedPath);
+        INodeDirectory child = new INodeDirectory(splitPath);
         parent.addChild(child);
+
+        parent = child;
+      }
+
+    }
+    this.printDirTree(dirTree, "");
+  }
+
+  /**
+   * 打印目录树
+   */
+  private void printDirTree(INodeDirectory dirTree, String str) {
+
+    System.out.println(str + dirTree.getPath());
+
+    if (!CollectionUtils.isEmpty(dirTree.getChildren())) {
+
+      str = " " + str;
+      for (INode dirTemp : dirTree.getChildren()) {
+        printDirTree((INodeDirectory) dirTemp, str);
       }
     }
   }
 
   /**
    * 对文件目录树递归查找目录
-   *
-   * @param dir
-   * @param path
-   * @return
    */
   private INodeDirectory findDirectory(INodeDirectory dir, String path) {
     if (dir.getChildren().size() == 0) {
@@ -70,11 +85,6 @@ public class FSDirectory {
 
         if ((childDir.getPath().equals(path))) {
           return childDir;
-        }
-
-        resultDir = findDirectory(childDir, path);
-        if (resultDir != null) {
-          return resultDir;
         }
       }
     }

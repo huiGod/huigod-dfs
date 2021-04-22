@@ -57,15 +57,15 @@ public class FSDirectory {
    * 打印目录树
    */
   private void printDirTree(INodeDirectory dirTree, String str) {
+    if (CollectionUtils.isEmpty(dirTree.getChildren())) {
+      return;
+    }
 
     System.out.println(str + dirTree.getPath());
 
-    if (!CollectionUtils.isEmpty(dirTree.getChildren())) {
-
-      str = " " + str;
-      for (INode dirTemp : dirTree.getChildren()) {
-        printDirTree((INodeDirectory) dirTemp, str);
-      }
+    str = " " + str;
+    for (INode dirTemp : dirTree.getChildren()) {
+      printDirTree((INodeDirectory) dirTemp, str);
     }
   }
 

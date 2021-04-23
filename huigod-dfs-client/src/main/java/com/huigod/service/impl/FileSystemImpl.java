@@ -2,6 +2,8 @@ package com.huigod.service.impl;
 
 import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
+import com.huigod.namenode.rpc.model.ShutdownRequest;
+import com.huigod.namenode.rpc.model.ShutdownResponse;
 import com.huigod.namenode.rpc.service.NameNodeServiceGrpc;
 import com.huigod.service.FileSystem;
 import io.grpc.ManagedChannel;
@@ -44,4 +46,16 @@ public class FileSystemImpl implements FileSystem {
     log.info("创建目录的响应：{}" ,response.getStatus());
   }
 
+  /**
+   * 优雅关闭
+   * @throws Exception
+   */
+  @Override
+  public void shutdown() throws Exception {
+    ShutdownRequest request = ShutdownRequest.newBuilder()
+        .setCode(1)
+        .build();
+    ShutdownResponse shutdownResponse = nameNode.shutdown(request);
+    log.info("shutdown response:{}",shutdownResponse);
+  }
 }

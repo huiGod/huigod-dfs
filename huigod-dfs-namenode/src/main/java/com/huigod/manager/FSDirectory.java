@@ -23,11 +23,6 @@ public class FSDirectory {
    */
   public void mkdir(String path) {
     // path = /usr/warehouse/hive
-    // 你应该先判断一下，“/”根目录下有没有一个“usr”目录的存在
-    // 如果说有的话，那么再判断一下，“/usr”目录下，有没有一个“/warehouse”目录的存在
-    // 如果说没有，那么就得先创建一个“/warehosue”对应的目录，挂在“/usr”目录下
-    // 接着再对“/hive”这个目录创建一个节点挂载上去
-
     synchronized (dirTree) {
       String[] paths = path.split("/");
       INodeDirectory parent = dirTree;
@@ -45,27 +40,24 @@ public class FSDirectory {
 
         INodeDirectory child = new INodeDirectory(splitPath);
         parent.addChild(child);
-
         parent = child;
       }
 
     }
-    this.printDirTree(dirTree, "");
+    //this.printDirTree(dirTree, "");
   }
 
   /**
    * 打印目录树
    */
-  private void printDirTree(INodeDirectory dirTree, String str) {
+  private void printDirTree(INodeDirectory dirTree, String blank) {
     if (CollectionUtils.isEmpty(dirTree.getChildren())) {
       return;
     }
 
-    System.out.println(str + dirTree.getPath());
-
-    str = " " + str;
     for (INode dirTemp : dirTree.getChildren()) {
-      printDirTree((INodeDirectory) dirTemp, str);
+      System.out.println(blank + ((INodeDirectory) dirTemp).getPath());
+      printDirTree((INodeDirectory) dirTemp, blank + " ");
     }
   }
 
@@ -76,8 +68,6 @@ public class FSDirectory {
     if (dir.getChildren().size() == 0) {
       return null;
     }
-
-    INodeDirectory resultDir = null;
 
     for (INode child : dir.getChildren()) {
       if (child instanceof INodeDirectory) {

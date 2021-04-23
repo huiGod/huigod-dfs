@@ -27,7 +27,14 @@ public class FSNameSystem {
    */
   public Boolean mkdir(String path) throws Exception {
     this.directory.mkdir(path);
-    this.editLog.logEdit("创建了一个目录：" + path);
+    this.editLog.logEdit("{'OP':'MKDIR','PATH':'" + path + "'}");
     return true;
+  }
+
+  /**
+   * 强制把内存里的edits log刷入磁盘中
+   */
+  public void flush() {
+    this.editLog.flush();
   }
 }

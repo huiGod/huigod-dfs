@@ -91,13 +91,27 @@ public class FSEditLog {
    */
   private void logSync() {
 
-    //交换完缓冲区后，直接唤醒业务线程让其可以继续写入数据到缓冲区，真正刷盘的过程不用让业务线程继续阻塞等待
+    //交换完缓冲区后，直接唤醒业务线程让其可以继续写入数据到缓冲区
+    //避免最好是的刷盘操作阻塞业务线程
     synchronized (this) {
       long txid = localTxid.get();
 
       //此时正在刷磁盘数据
       if (isSyncRunning) {
+        //可能之前被wait的线程，也触发了刷盘操作
+        //但是txit小于刷盘的syncTxid，说明他的数据已经被其他线程刷盘了，可以直接返回
+        if (txid <= syncTxid) {
+          return;
+        }
 
+        //否则需要等待去刷盘的操作
+        try {
+          while (isSyncRunning) {
+            wait(1000);
+          }
+        } catch (Exception e) {
+          log.error("logSync wait is error:", e);
+        }
       }
 
       //交换两块缓冲区
@@ -108,7 +122,9 @@ public class FSEditLog {
 
       //让业务线程不需要继续阻塞
       isSchedulingSync = false;
+      //唤醒业务写的线程
       notifyAll();
+      //阻塞需要刷盘的其他线程
       isSyncRunning = true;
 
     }
@@ -123,6 +139,18 @@ public class FSEditLog {
     synchronized (this) {
       isSyncRunning = false;
       notifyAll();
+    }
+  }
+
+  /**
+   * 强制把内存缓冲里的数据刷入磁盘中
+   */
+  public void flush() {
+    doubleBuffer.setReadyToSync();
+    try {
+      doubleBuffer.flush();
+    } catch (Exception e) {
+      log.error("flush is error:", e);
     }
   }
 }

@@ -12,4 +12,9 @@ public interface FileSystem {
    */
   void mkdir(String path) throws Exception;
 
+  /**
+   * 优雅关闭
+   * @throws Exception
+   */
+  void shutdown() throws Exception;
 }

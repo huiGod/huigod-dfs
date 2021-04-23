@@ -8,6 +8,8 @@ import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
 import com.huigod.namenode.rpc.model.RegisterRequest;
 import com.huigod.namenode.rpc.model.RegisterResponse;
+import com.huigod.namenode.rpc.model.ShutdownRequest;
+import com.huigod.namenode.rpc.model.ShutdownResponse;
 import com.huigod.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +22,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
   public static final Integer STATUS_SUCCESS = 1;
   public static final Integer STATUS_FAILURE = 2;
+  public static final Integer STATUS_SHUTDOWN = 3;
 
   /**
    * 负责管理元数据的核心组件：管理的是一些文件目录树，支持权限设置
@@ -29,6 +32,11 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
    * 负责管理集群中所有的Datanode的组件
    */
   private DataNodeManager datanodeManager;
+
+  /**
+   * 是否还在运行
+   */
+  private volatile Boolean isRunning = true;
 
   public NameNodeServiceImpl(FSNameSystem nameSystem, DataNodeManager datanodeManager) {
     this.nameSystem = nameSystem;
@@ -78,18 +86,32 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   @Override
   public void mkdir(MkdirRequest request, StreamObserver<MkdirResponse> responseObserver) {
     try {
-      nameSystem.mkdir(request.getPath());
-
       log.info("创建目录：path {}", request.getPath());
 
-      MkdirResponse response = MkdirResponse.newBuilder()
-          .setStatus(STATUS_SUCCESS)
-          .build();
+      MkdirResponse response;
+
+      if (!isRunning) {
+        response = MkdirResponse.newBuilder()
+            .setStatus(STATUS_SHUTDOWN)
+            .build();
+      } else {
+        nameSystem.mkdir(request.getPath());
+        response = MkdirResponse.newBuilder()
+            .setStatus(STATUS_SUCCESS)
+            .build();
+      }
 
       responseObserver.onNext(response);
       responseObserver.onCompleted();
     } catch (Exception e) {
       log.error("mkdir is error:", e);
     }
+  }
+
+  @Override
+  public void shutdown(ShutdownRequest request, StreamObserver<ShutdownResponse> responseObserver) {
+    log.info("receive shutdown message!!!!!!!!!!");
+    this.isRunning = false;
+    this.nameSystem.flush();
   }
 }

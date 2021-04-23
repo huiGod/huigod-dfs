@@ -1,18 +1,10 @@
 package com.huigod.namenode.rpc.service;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
-import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
 import static io.grpc.stub.ClientCalls.blockingUnaryCall;
 import static io.grpc.stub.ClientCalls.futureUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
@@ -123,6 +115,38 @@ public final class NameNodeServiceGrpc {
      return getMkdirMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ShutdownRequest,
+      com.huigod.namenode.rpc.model.ShutdownResponse> getShutdownMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "shutdown",
+      requestType = com.huigod.namenode.rpc.model.ShutdownRequest.class,
+      responseType = com.huigod.namenode.rpc.model.ShutdownResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ShutdownRequest,
+      com.huigod.namenode.rpc.model.ShutdownResponse> getShutdownMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ShutdownRequest, com.huigod.namenode.rpc.model.ShutdownResponse> getShutdownMethod;
+    if ((getShutdownMethod = NameNodeServiceGrpc.getShutdownMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getShutdownMethod = NameNodeServiceGrpc.getShutdownMethod) == null) {
+          NameNodeServiceGrpc.getShutdownMethod = getShutdownMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.ShutdownRequest, com.huigod.namenode.rpc.model.ShutdownResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "shutdown"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ShutdownRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ShutdownResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("shutdown"))
+                  .build();
+          }
+        }
+     }
+     return getShutdownMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -171,6 +195,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getMkdirMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void shutdown(com.huigod.namenode.rpc.model.ShutdownRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ShutdownResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getShutdownMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -194,6 +225,13 @@ public final class NameNodeServiceGrpc {
                 com.huigod.namenode.rpc.model.MkdirRequest,
                 com.huigod.namenode.rpc.model.MkdirResponse>(
                   this, METHODID_MKDIR)))
+          .addMethod(
+            getShutdownMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.ShutdownRequest,
+                com.huigod.namenode.rpc.model.ShutdownResponse>(
+                  this, METHODID_SHUTDOWN)))
           .build();
     }
   }
@@ -239,6 +277,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getMkdirMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void shutdown(com.huigod.namenode.rpc.model.ShutdownRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ShutdownResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getShutdownMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -278,6 +324,13 @@ public final class NameNodeServiceGrpc {
     public com.huigod.namenode.rpc.model.MkdirResponse mkdir(com.huigod.namenode.rpc.model.MkdirRequest request) {
       return blockingUnaryCall(
           getChannel(), getMkdirMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.ShutdownResponse shutdown(com.huigod.namenode.rpc.model.ShutdownRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getShutdownMethod(), getCallOptions(), request);
     }
   }
 
@@ -322,11 +375,20 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getMkdirMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.ShutdownResponse> shutdown(
+        com.huigod.namenode.rpc.model.ShutdownRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getShutdownMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_HEARTBEAT = 1;
   private static final int METHODID_MKDIR = 2;
+  private static final int METHODID_SHUTDOWN = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -356,6 +418,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_MKDIR:
           serviceImpl.mkdir((com.huigod.namenode.rpc.model.MkdirRequest) request,
               (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.MkdirResponse>) responseObserver);
+          break;
+        case METHODID_SHUTDOWN:
+          serviceImpl.shutdown((com.huigod.namenode.rpc.model.ShutdownRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ShutdownResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -421,6 +487,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getRegisterMethod())
               .addMethod(getHeartbeatMethod())
               .addMethod(getMkdirMethod())
+              .addMethod(getShutdownMethod())
               .build();
         }
       }

@@ -10,13 +10,41 @@ import org.junit.Test;
 public class AppTest {
 
   /**
-   * Rigorous Test :-)
+   * 内存目录树单测
    */
   @Test
-  public void shouldAnswerWithTrue() throws Exception{
+  public void testWriteDir() throws Exception {
     FileSystem fileSystem = new FileSystemImpl();
     fileSystem.mkdir("/hello/world");
     fileSystem.mkdir("/hello/you");
     fileSystem.mkdir("/you");
+    fileSystem.mkdir("/you/hello");
+    fileSystem.mkdir("/ni/hello");
+  }
+
+  @Test
+  public void testWriteData() throws Exception {
+    FileSystem fileSystem = new FileSystemImpl();
+
+    for (int i = 1; i <= 4; i++) {
+
+      new Thread(() -> {
+        for (int j = 1; j <= 10; j++) {
+          try {
+            fileSystem.mkdir("/test/path/" + j + "-" + Thread.currentThread().getName());
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }).start();
+    }
+
+    Thread.sleep(50000);
+  }
+
+  @Test
+  public void testShutDown() throws Exception {
+    FileSystem fileSystem = new FileSystemImpl();
+    fileSystem.shutdown();
   }
 }

@@ -29,6 +29,11 @@ public class DoubleBuffer {
    * 专门用来将数据同步到磁盘中去的一块缓冲
    */
   EditLogBuffer syncBuffer = new EditLogBuffer();
+  /**
+   * 当前这块缓冲区写入的最大的一个txid
+   */
+  long startTxid = 1L;
+
 
   /**
    * 将edits log写到内存缓冲里去
@@ -48,13 +53,11 @@ public class DoubleBuffer {
 
   /**
    * 判断一下当前的缓冲区是否写满了需要刷到磁盘上去
+   *
    * @return
    */
   public boolean shouldSyncToDisk() {
-    if(currentBuffer.size() >= EDIT_LOG_BUFFER_LIMIT) {
-      return true;
-    }
-    return false;
+    return currentBuffer.size() >= EDIT_LOG_BUFFER_LIMIT;
   }
 
   /**
@@ -76,14 +79,9 @@ public class DoubleBuffer {
     ByteArrayOutputStream buffer;
 
     /**
-     * 当前这块缓冲区写入的最大的一个txid
-     */
-    long maxTxid = 0L;
-
-    /**
      * 上一次flush到磁盘的时候他的最大的txid是多少
      */
-    long lastMaxTxid = 0L;
+    long endTxid = 0L;
 
     public EditLogBuffer() {
       this.buffer = new ByteArrayOutputStream(EDIT_LOG_BUFFER_LIMIT * 2);
@@ -96,7 +94,8 @@ public class DoubleBuffer {
      * @throws IOException
      */
     public void write(EditLog editLog) throws IOException {
-      this.maxTxid = editLog.getTxid();
+      //刷盘的时候是空的EditLogBuffer，最终写入的就是最大的txid
+      this.endTxid = editLog.getTxid();
       buffer.write(editLog.getContent().getBytes(StandardCharsets.UTF_8));
       buffer.write("\n".getBytes(StandardCharsets.UTF_8));
       log.info("写入缓冲区数据为：{}，当前缓冲区大小：{}", editLog.getContent(), size());
@@ -120,8 +119,8 @@ public class DoubleBuffer {
       byte[] data = buffer.toByteArray();
       ByteBuffer dataBuffer = ByteBuffer.wrap(data);
 
-      String editsLogFilePath = "\\data\\edits-"
-          + (++lastMaxTxid) + "-" + maxTxid + ".log";
+      String editsLogFilePath = "logs/edits-"
+          + startTxid + "-" + endTxid + ".log";
 
       RandomAccessFile file = null;
       FileOutputStream out = null;
@@ -146,9 +145,9 @@ public class DoubleBuffer {
         if (editsLogFileChannel != null) {
           editsLogFileChannel.close();
         }
-
-        this.lastMaxTxid = maxTxid;
       }
+
+      startTxid = endTxid + 1;
     }
 
     /**

@@ -29,7 +29,7 @@ public class EditsLogFetcher extends Thread {
       try {
         JSONArray fetchEditsLog = nameNode.fetchEditsLog();
         if (CollectionUtils.isEmpty(fetchEditsLog)) {
-          log.info("EditsLogFetcher no fetch data return");
+          log.info("EditsLogFetcher fetch no data return then wait......");
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {

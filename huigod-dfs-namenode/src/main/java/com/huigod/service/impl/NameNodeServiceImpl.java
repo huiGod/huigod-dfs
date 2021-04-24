@@ -114,7 +114,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   @Override
   public void mkdir(MkdirRequest request, StreamObserver<MkdirResponse> responseObserver) {
     try {
-      log.info("创建目录：path {}", request.getPath());
+      //log.info("创建目录：path {}", request.getPath());
 
       MkdirResponse response;
 
@@ -224,14 +224,18 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog) {
     currentBufferedEditsLog.clear();
 
-    //每次冲内存获取数据的时候，需要重新从NameNode获取，因为内存中数据是会增加的
+    //优化点：每次从内存读取数据，没有必要都去nameNode拉取内存的完整数据（也需要进行加锁）
+    //如果需要fetch的数据在内存则不需要再去nameNode读取数据
     String[] bufferedEditsLog = nameSystem.getEditsLog().getBufferedEditsLog();
-    Arrays.stream(bufferedEditsLog)
-        .forEach(editLog -> currentBufferedEditsLog.add(JSONObject.parseObject(editLog)));
 
-    bufferedFlushedTxid = null;
+    if (bufferedEditsLog != null && bufferedEditsLog.length > 0) {
+      Arrays.stream(bufferedEditsLog)
+          .forEach(editLog -> currentBufferedEditsLog.add(JSONObject.parseObject(editLog)));
 
-    fetchFromCurrentBuffer(fetchedEditsLog);
+      bufferedFlushedTxid = null;
+
+      fetchFromCurrentBuffer(fetchedEditsLog);
+    }
   }
 
   /**

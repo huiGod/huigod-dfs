@@ -26,10 +26,10 @@ public class AppTest {
   public void testWriteData() throws Exception {
     FileSystem fileSystem = new FileSystemImpl();
 
-    for (int i = 1; i <= 4; i++) {
+    for (int i = 1; i <= 10; i++) {
 
       new Thread(() -> {
-        for (int j = 1; j <= 10; j++) {
+        for (int j = 1; j <= 100; j++) {
           try {
             fileSystem.mkdir("/test/path/" + j + "-" + Thread.currentThread().getName());
           } catch (Exception e) {

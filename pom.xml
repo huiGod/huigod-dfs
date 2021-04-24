@@ -18,6 +18,7 @@
     <module>huigod-dfs-namenode</module>
     <module>huigod-dfs-datanode</module>
     <module>huigod-dfs-client</module>
+    <module>huigod-dfs-backupnode</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

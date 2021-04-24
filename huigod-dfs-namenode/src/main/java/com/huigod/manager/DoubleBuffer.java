@@ -8,6 +8,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,6 +36,10 @@ public class DoubleBuffer {
    */
   long startTxid = 1L;
 
+  /**
+   * 已经输入磁盘中的txid范围
+   */
+  private List<String> flushedTxids = new ArrayList<>();
 
   /**
    * 将edits log写到内存缓冲里去
@@ -66,6 +72,29 @@ public class DoubleBuffer {
   public void flush() throws Exception {
     syncBuffer.flush();
     syncBuffer.clear();
+  }
+
+  /**
+   * 获取已经刷入磁盘的editslog数据
+   *
+   * @return
+   */
+  public List<String> getFlushedTxids() {
+    return flushedTxids;
+  }
+
+  /**
+   * 获取当前缓冲区里的数据
+   *
+   * @return
+   */
+  public String[] getBufferedEditsLog() {
+    if (currentBuffer.size() == 0) {
+      return null;
+    }
+
+    String rowData = new String(currentBuffer.getBufferData());
+    return rowData.split("\n");
   }
 
   /**
@@ -119,8 +148,9 @@ public class DoubleBuffer {
       byte[] data = buffer.toByteArray();
       ByteBuffer dataBuffer = ByteBuffer.wrap(data);
 
-      String editsLogFilePath = "logs/edits-"
-          + startTxid + "-" + endTxid + ".log";
+      String editsLogFilePath = "logs/edits-" + startTxid + "-" + endTxid + ".log";
+
+      flushedTxids.add(startTxid + "_" + endTxid);
 
       RandomAccessFile file = null;
       FileOutputStream out = null;
@@ -155,6 +185,15 @@ public class DoubleBuffer {
      */
     public void clear() {
       buffer.reset();
+    }
+
+    /**
+     * 获取内存缓冲区当前的数据
+     *
+     * @return
+     */
+    public byte[] getBufferData() {
+      return buffer.toByteArray();
     }
   }
 }

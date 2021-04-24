@@ -2,6 +2,7 @@ package com.huigod.manager;
 
 
 import com.huigod.entity.EditLog;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -151,6 +152,28 @@ public class FSEditLog {
       doubleBuffer.flush();
     } catch (Exception e) {
       log.error("flush is error:", e);
+    }
+  }
+
+  /**
+   * 获取已经刷入磁盘的editslog数据
+   * @return
+   */
+  public List<String> getFlushedTxids() {
+    synchronized(this) {
+      return doubleBuffer.getFlushedTxids();
+    }
+  }
+
+
+  /**
+   * 获取当前缓冲区里的数据
+   * @return
+   */
+  public String[] getBufferedEditsLog() {
+
+    synchronized (this) {
+      return doubleBuffer.getBufferedEditsLog();
     }
   }
 }

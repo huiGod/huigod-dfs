@@ -1,5 +1,6 @@
 package com.huigod.server;
 
+import com.huigod.manager.FSImageCheckpointer;
 import com.huigod.manager.FSNameSystem;
 
 /**
@@ -24,6 +25,9 @@ public class BackupNode {
   public void start() throws Exception {
     EditsLogFetcher editsLogFetcher = new EditsLogFetcher(this, nameSystem);
     editsLogFetcher.start();
+
+    FSImageCheckpointer fsimageCheckpointer = new FSImageCheckpointer(this, nameSystem);
+    fsimageCheckpointer.start();
   }
 
   public void run() throws Exception {

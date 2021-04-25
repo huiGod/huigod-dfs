@@ -8,8 +8,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,7 +39,7 @@ public class DoubleBuffer {
   /**
    * 已经输入磁盘中的txid范围
    */
-  private List<String> flushedTxids = new ArrayList<>();
+  private List<String> flushedTxids = new CopyOnWriteArrayList<>();
 
   /**
    * 将edits log写到内存缓冲里去

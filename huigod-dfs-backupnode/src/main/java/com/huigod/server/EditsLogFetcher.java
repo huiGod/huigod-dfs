@@ -13,6 +13,8 @@ import org.apache.commons.collections4.CollectionUtils;
 @Slf4j
 public class EditsLogFetcher extends Thread {
 
+  public static final Integer BACKUP_NODE_FETCH_SIZE = 10;
+
   private BackupNode backupNode;
   private NameNodeRpcClient nameNode;
   private FSNameSystem nameSystem;
@@ -25,6 +27,8 @@ public class EditsLogFetcher extends Thread {
 
   @Override
   public void run() {
+    log.info("Editslog抓取线程已经启动......");
+
     while (backupNode.isRunning()) {
       try {
         JSONArray fetchEditsLog = nameNode.fetchEditsLog();
@@ -38,15 +42,20 @@ public class EditsLogFetcher extends Thread {
           continue;
         }
 
+        if (fetchEditsLog.size() < BACKUP_NODE_FETCH_SIZE) {
+          Thread.sleep(1000);
+          log.info("拉取到的edits log不足10条数据，等待1秒后再次继续去拉取");
+        }
+
         for (int i = 0; i < fetchEditsLog.size(); i++) {
           JSONObject editsLog = fetchEditsLog.getJSONObject(i);
           log.info("fetch data:{}", editsLog.toJSONString());
 
           String op = editsLog.getString("OP");
-          if (op.equals("MKDIR")) {
+          if ("MKDIR".equals(op)) {
             String path = editsLog.getString("PATH");
             try {
-              nameSystem.mkdir(path);
+              nameSystem.mkdir(editsLog.getLongValue("txid"), path);
             } catch (Exception e) {
               e.printStackTrace();
             }

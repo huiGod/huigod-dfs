@@ -157,17 +157,17 @@ public class FSEditLog {
 
   /**
    * 获取已经刷入磁盘的editslog数据
+   *
    * @return
    */
   public List<String> getFlushedTxids() {
-    synchronized(this) {
-      return doubleBuffer.getFlushedTxids();
-    }
+    return doubleBuffer.getFlushedTxids();
   }
 
 
   /**
    * 获取当前缓冲区里的数据
+   *
    * @return
    */
   public String[] getBufferedEditsLog() {

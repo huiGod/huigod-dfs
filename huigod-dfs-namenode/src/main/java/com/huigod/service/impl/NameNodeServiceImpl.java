@@ -60,6 +60,11 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
    */
   private long syncedTxid = 0L;
 
+  /**
+   * 当前缓存里的editslog最大的一个txid
+   */
+  private long currentBufferedMaxTxid = 0L;
+
 
   /**
    * 是否还在运行
@@ -166,6 +171,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
     //磁盘中没有数据，则editLog都存在于内存中
     if (CollectionUtils.isEmpty(flushedTxids)) {
+      log.info("暂时没有任何磁盘文件，直接从内存缓冲中拉取editsLog......");
       fetchFromBufferedEditsLog(fetchedEditsLog);
     } else {
       //此时NameNode已经有数据刷到磁盘文件，需要扫描磁盘文件的索引范围
@@ -174,16 +180,19 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
       if (bufferedFlushedTxid != null) {
         // 如果fetch的txid就在当前内存缓存中，则直接读取内存数据即可
         if (existInFlushedFile(bufferedFlushedTxid)) {
+          log.info("上一次已经缓存过磁盘文件的数据，直接从磁盘文件缓存中拉取editsLog......");
           fetchFromCurrentBuffer(fetchedEditsLog);
         } else {
           //否则从下一个磁盘文件去获取
           String nextFlushedTxid = getNextFlushedTxid(flushedTxids, bufferedFlushedTxid);
           // 如果可以找到下一个磁盘文件，那么就从下一个磁盘文件里开始读取数据
           if (nextFlushedTxid != null) {
+            log.info("上一次缓存的磁盘文件找不到要拉取的数据，从下一个磁盘文件中拉取editslog......");
             fetchFromFlushedFile(nextFlushedTxid, fetchedEditsLog);
           }
           // 如果没有找到下一个文件，此时就需要从内存里去继续读取
           else {
+            log.info("上一次缓存的磁盘文件找不到要拉取的数据，而且没有下一个磁盘文件，尝试从内存缓冲中拉取editslog......");
             fetchFromBufferedEditsLog(fetchedEditsLog);
           }
         }
@@ -191,10 +200,11 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         //第一次从磁盘获取数据
 
         //遍历所有的磁盘文件的索引范围，0-390，391-782
-        Boolean fechedFromFlushedFile = false;
+        boolean fechedFromFlushedFile = false;
         for (String flushedTxid : flushedTxids) {
           // 如果要fetch的txid就在当前磁盘文件索引范围内
           if (existInFlushedFile(flushedTxid)) {
+            log.info("尝试从磁盘文件中拉取editslog，flushedTxid={}", flushedTxid);
             //为了避免一个磁盘文件被fetch的数据不够，因此直接缓存当前磁盘文件和下一个磁盘文件的数据到内存
             fetchFromFlushedFile(flushedTxid, fetchedEditsLog);
             fechedFromFlushedFile = true;
@@ -204,12 +214,13 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
         //需要fetch的txid比磁盘文件的数据都要新，则直接从内存中获取
         if (!fechedFromFlushedFile) {
+          log.info("所有磁盘文件都没找到要拉取的editslog，尝试直接从内存缓冲中拉取editslog......");
           fetchFromBufferedEditsLog(fetchedEditsLog);
         }
       }
     }
     response = FetchEditsLogResponse.newBuilder()
-        .setEditsLog(fetchedEditsLog.toJSONString()) // []
+        .setEditsLog(fetchedEditsLog.toJSONString())
         .build();
 
     responseObserver.onNext(response);
@@ -222,15 +233,27 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
    * @param fetchedEditsLog
    */
   private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog) {
+
+    //需要拉取的txid存在内存中
+    long fetchTxid = syncedTxid + 1;
+    if (fetchTxid <= currentBufferedMaxTxid) {
+      log.info("尝试从内存缓冲拉取的时候，发现上一次内存缓存有数据可供拉取......");
+      fetchFromCurrentBuffer(fetchedEditsLog);
+      return;
+    }
+
     currentBufferedEditsLog.clear();
 
-    //优化点：每次从内存读取数据，没有必要都去nameNode拉取内存的完整数据（也需要进行加锁）
-    //如果需要fetch的数据在内存则不需要再去nameNode读取数据
+    //从nameNode拉取内存数据
     String[] bufferedEditsLog = nameSystem.getEditsLog().getBufferedEditsLog();
 
     if (bufferedEditsLog != null && bufferedEditsLog.length > 0) {
       Arrays.stream(bufferedEditsLog)
-          .forEach(editLog -> currentBufferedEditsLog.add(JSONObject.parseObject(editLog)));
+          .forEach(editLog -> {
+            currentBufferedEditsLog.add(JSONObject.parseObject(editLog));
+            //记录当前内存缓存中最大txid
+            currentBufferedMaxTxid = JSONObject.parseObject(editLog).getLongValue("txid");
+          });
 
       bufferedFlushedTxid = null;
 
@@ -293,6 +316,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
       currentBufferedEditsLog.clear();
       for (String editsLog : editsLogs) {
         currentBufferedEditsLog.add(JSONObject.parseObject(editsLog));
+        currentBufferedMaxTxid = JSONObject.parseObject(editsLog).getLongValue("txid");
       }
       //设置当前内存里缓冲的磁盘文件的索引数据
       bufferedFlushedTxid = flushedTxid;

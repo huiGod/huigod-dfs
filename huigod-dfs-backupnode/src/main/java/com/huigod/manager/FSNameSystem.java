@@ -1,5 +1,7 @@
 package com.huigod.manager;
 
+import com.huigod.entity.FSImage;
+
 /**
  * 负责管理元数据的核心组件
  */
@@ -20,8 +22,17 @@ public class FSNameSystem {
    * @param path 目录路径
    * @return 是否成功
    */
-  public Boolean mkdir(String path) throws Exception {
-    this.directory.mkdir(path);
+  public Boolean mkdir(long txid, String path) throws Exception {
+    this.directory.mkdir(txid, path);
     return true;
+  }
+
+  /**
+   * 获取文件目录树的json
+   *
+   * @return
+   */
+  public FSImage getFSImage() {
+    return directory.getFSImage();
   }
 }

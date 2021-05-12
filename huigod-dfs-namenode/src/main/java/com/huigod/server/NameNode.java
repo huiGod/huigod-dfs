@@ -11,7 +11,7 @@ public class NameNode {
   /**
    * 负责管理元数据的核心组件：管理的是一些文件目录树，支持权限设置
    */
-  private FSNameSystem namesystem;
+  private FSNameSystem nameSystem;
   /**
    * 负责管理集群中所有的Datanode的组件
    */
@@ -22,18 +22,25 @@ public class NameNode {
   private NameNodeRpcServer rpcServer;
 
   /**
+   * 接收backupnode上传的fsimage文件的server
+   */
+  private FSImageUploadServer fsimageUploadServer;
+
+  /**
    * 初始化NameNode
    */
   private void initialize() throws Exception {
-    this.namesystem = new FSNameSystem();
+    this.nameSystem = new FSNameSystem();
     this.datanodeManager = new DataNodeManager();
-    this.rpcServer = new NameNodeRpcServer(this.namesystem, this.datanodeManager);
+    this.rpcServer = new NameNodeRpcServer(this.nameSystem, this.datanodeManager);
+    this.fsimageUploadServer = new FSImageUploadServer();
   }
 
   /**
    * 让NameNode运行起来
    */
   private void start() throws Exception {
+    this.fsimageUploadServer.start();
     this.rpcServer.start();
     this.rpcServer.blockUntilShutdown();
   }

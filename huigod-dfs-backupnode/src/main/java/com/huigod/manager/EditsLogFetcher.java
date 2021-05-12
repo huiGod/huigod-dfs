@@ -1,9 +1,9 @@
-package com.huigod.server;
+package com.huigod.manager;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.huigod.manager.FSNameSystem;
 import com.huigod.network.NameNodeRpcClient;
+import com.huigod.server.BackupNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -31,9 +31,19 @@ public class EditsLogFetcher extends Thread {
 
     while (backupNode.isRunning()) {
       try {
-        JSONArray fetchEditsLog = nameNode.fetchEditsLog();
+
+        if (!nameSystem.isFinishedRecover()) {
+          log.info("当前还没完成元数据恢复，不进行editlog同步......");
+          Thread.sleep(1000);
+          continue;
+        }
+
+        //执行完checkpoint后，会更新该txid
+        long syncedTxid = nameSystem.getSyncedTxid();
+        JSONArray fetchEditsLog = nameNode.fetchEditsLog(syncedTxid);
+
         if (CollectionUtils.isEmpty(fetchEditsLog)) {
-          log.info("EditsLogFetcher fetch no data return then wait......");
+          log.debug("没有拉取到任何一条editslog，等待1秒后继续尝试拉取");
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
@@ -61,8 +71,11 @@ public class EditsLogFetcher extends Thread {
             }
           }
         }
+
+        nameNode.setIsNameNodeRunning(true);
       } catch (Exception e) {
         log.error("fetch thread run is error:", e);
+        nameNode.setIsNameNodeRunning(false);
       }
     }
   }

@@ -29,9 +29,9 @@ public class AppTest {
     for (int i = 1; i <= 10; i++) {
 
       new Thread(() -> {
-        for (int j = 1; j <= 100; j++) {
+        for (int j = 1; j <= 200; j++) {
           try {
-            fileSystem.mkdir("/test/path/" + j + "-" + Thread.currentThread().getName());
+            fileSystem.mkdir("/hive/path/" + j + "-" + Thread.currentThread().getName());
           } catch (Exception e) {
             e.printStackTrace();
           }

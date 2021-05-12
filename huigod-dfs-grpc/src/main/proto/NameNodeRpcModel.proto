@@ -41,8 +41,17 @@ message ShutdownResponse{
 
 message FetchEditsLogRequest{
   int32 code = 1;
+  int64 syncedTxid = 2;
 }
 
 message FetchEditsLogResponse {
   string editsLog = 1;
+}
+
+message UpdateCheckpointTxidRequest {
+  int64 txid = 1;
+}
+
+message UpdateCheckpointTxidResponse {
+  int32 status = 1;
 }

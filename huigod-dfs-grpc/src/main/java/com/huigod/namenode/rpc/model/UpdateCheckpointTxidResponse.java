@@ -4,25 +4,25 @@
 package com.huigod.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.huigod.namenode.rpc.FetchEditsLogRequest}
+ * Protobuf type {@code com.huigod.namenode.rpc.UpdateCheckpointTxidResponse}
  */
-public  final class FetchEditsLogRequest extends
+public  final class UpdateCheckpointTxidResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.huigod.namenode.rpc.FetchEditsLogRequest)
-    FetchEditsLogRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.huigod.namenode.rpc.UpdateCheckpointTxidResponse)
+    UpdateCheckpointTxidResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use FetchEditsLogRequest.newBuilder() to construct.
-  private FetchEditsLogRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use UpdateCheckpointTxidResponse.newBuilder() to construct.
+  private UpdateCheckpointTxidResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private FetchEditsLogRequest() {
+  private UpdateCheckpointTxidResponse() {
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new FetchEditsLogRequest();
+    return new UpdateCheckpointTxidResponse();
   }
 
   @Override
@@ -30,7 +30,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private FetchEditsLogRequest(
+  private UpdateCheckpointTxidResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -50,12 +50,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            code_ = input.readInt32();
-            break;
-          }
-          case 16: {
-
-            syncedTxid_ = input.readInt64();
+            status_ = input.readInt32();
             break;
           }
           default: {
@@ -79,35 +74,25 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_FetchEditsLogRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_FetchEditsLogRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            FetchEditsLogRequest.class, Builder.class);
+            UpdateCheckpointTxidResponse.class, Builder.class);
   }
 
-  public static final int CODE_FIELD_NUMBER = 1;
-  private int code_;
+  public static final int STATUS_FIELD_NUMBER = 1;
+  private int status_;
   /**
-   * <code>int32 code = 1;</code>
-   * @return The code.
+   * <code>int32 status = 1;</code>
+   * @return The status.
    */
-  public int getCode() {
-    return code_;
-  }
-
-  public static final int SYNCEDTXID_FIELD_NUMBER = 2;
-  private long syncedTxid_;
-  /**
-   * <code>int64 syncedTxid = 2;</code>
-   * @return The syncedTxid.
-   */
-  public long getSyncedTxid() {
-    return syncedTxid_;
+  public int getStatus() {
+    return status_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -124,11 +109,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (code_ != 0) {
-      output.writeInt32(1, code_);
-    }
-    if (syncedTxid_ != 0L) {
-      output.writeInt64(2, syncedTxid_);
+    if (status_ != 0) {
+      output.writeInt32(1, status_);
     }
     unknownFields.writeTo(output);
   }
@@ -139,13 +121,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (code_ != 0) {
+    if (status_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, code_);
-    }
-    if (syncedTxid_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, syncedTxid_);
+        .computeInt32Size(1, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -157,15 +135,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof FetchEditsLogRequest)) {
+    if (!(obj instanceof UpdateCheckpointTxidResponse)) {
       return super.equals(obj);
     }
-    FetchEditsLogRequest other = (FetchEditsLogRequest) obj;
+    UpdateCheckpointTxidResponse other = (UpdateCheckpointTxidResponse) obj;
 
-    if (getCode()
-        != other.getCode()) return false;
-    if (getSyncedTxid()
-        != other.getSyncedTxid()) return false;
+    if (getStatus()
+        != other.getStatus()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -177,79 +153,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + CODE_FIELD_NUMBER;
-    hash = (53 * hash) + getCode();
-    hash = (37 * hash) + SYNCEDTXID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getSyncedTxid());
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getStatus();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static FetchEditsLogRequest parseFrom(byte[] data)
+  public static UpdateCheckpointTxidResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static FetchEditsLogRequest parseFrom(java.io.InputStream input)
+  public static UpdateCheckpointTxidResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static FetchEditsLogRequest parseDelimitedFrom(java.io.InputStream input)
+  public static UpdateCheckpointTxidResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static FetchEditsLogRequest parseDelimitedFrom(
+  public static UpdateCheckpointTxidResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static FetchEditsLogRequest parseFrom(
+  public static UpdateCheckpointTxidResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -262,7 +235,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(FetchEditsLogRequest prototype) {
+  public static Builder newBuilder(UpdateCheckpointTxidResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -278,26 +251,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.huigod.namenode.rpc.FetchEditsLogRequest}
+   * Protobuf type {@code com.huigod.namenode.rpc.UpdateCheckpointTxidResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.huigod.namenode.rpc.FetchEditsLogRequest)
-      FetchEditsLogRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.huigod.namenode.rpc.UpdateCheckpointTxidResponse)
+      UpdateCheckpointTxidResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_FetchEditsLogRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_FetchEditsLogRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              FetchEditsLogRequest.class, Builder.class);
+              UpdateCheckpointTxidResponse.class, Builder.class);
     }
 
-    // Construct using com.huigod.namenode.rpc.model.FetchEditsLogRequest.newBuilder()
+    // Construct using com.huigod.namenode.rpc.model.UpdateCheckpointTxidResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -315,9 +288,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      code_ = 0;
-
-      syncedTxid_ = 0L;
+      status_ = 0;
 
       return this;
     }
@@ -325,17 +296,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_FetchEditsLogRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_descriptor;
     }
 
     @Override
-    public FetchEditsLogRequest getDefaultInstanceForType() {
-      return FetchEditsLogRequest.getDefaultInstance();
+    public UpdateCheckpointTxidResponse getDefaultInstanceForType() {
+      return UpdateCheckpointTxidResponse.getDefaultInstance();
     }
 
     @Override
-    public FetchEditsLogRequest build() {
-      FetchEditsLogRequest result = buildPartial();
+    public UpdateCheckpointTxidResponse build() {
+      UpdateCheckpointTxidResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -343,10 +314,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public FetchEditsLogRequest buildPartial() {
-      FetchEditsLogRequest result = new FetchEditsLogRequest(this);
-      result.code_ = code_;
-      result.syncedTxid_ = syncedTxid_;
+    public UpdateCheckpointTxidResponse buildPartial() {
+      UpdateCheckpointTxidResponse result = new UpdateCheckpointTxidResponse(this);
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -385,21 +355,18 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof FetchEditsLogRequest) {
-        return mergeFrom((FetchEditsLogRequest)other);
+      if (other instanceof UpdateCheckpointTxidResponse) {
+        return mergeFrom((UpdateCheckpointTxidResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(FetchEditsLogRequest other) {
-      if (other == FetchEditsLogRequest.getDefaultInstance()) return this;
-      if (other.getCode() != 0) {
-        setCode(other.getCode());
-      }
-      if (other.getSyncedTxid() != 0L) {
-        setSyncedTxid(other.getSyncedTxid());
+    public Builder mergeFrom(UpdateCheckpointTxidResponse other) {
+      if (other == UpdateCheckpointTxidResponse.getDefaultInstance()) return this;
+      if (other.getStatus() != 0) {
+        setStatus(other.getStatus());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -416,11 +383,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      FetchEditsLogRequest parsedMessage = null;
+      UpdateCheckpointTxidResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (FetchEditsLogRequest) e.getUnfinishedMessage();
+        parsedMessage = (UpdateCheckpointTxidResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -430,62 +397,32 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int code_ ;
+    private int status_ ;
     /**
-     * <code>int32 code = 1;</code>
-     * @return The code.
+     * <code>int32 status = 1;</code>
+     * @return The status.
      */
-    public int getCode() {
-      return code_;
+    public int getStatus() {
+      return status_;
     }
     /**
-     * <code>int32 code = 1;</code>
-     * @param value The code to set.
+     * <code>int32 status = 1;</code>
+     * @param value The status to set.
      * @return This builder for chaining.
      */
-    public Builder setCode(int value) {
+    public Builder setStatus(int value) {
       
-      code_ = value;
+      status_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 code = 1;</code>
+     * <code>int32 status = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearCode() {
+    public Builder clearStatus() {
       
-      code_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private long syncedTxid_ ;
-    /**
-     * <code>int64 syncedTxid = 2;</code>
-     * @return The syncedTxid.
-     */
-    public long getSyncedTxid() {
-      return syncedTxid_;
-    }
-    /**
-     * <code>int64 syncedTxid = 2;</code>
-     * @param value The syncedTxid to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSyncedTxid(long value) {
-      
-      syncedTxid_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 syncedTxid = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSyncedTxid() {
-      
-      syncedTxid_ = 0L;
+      status_ = 0;
       onChanged();
       return this;
     }
@@ -502,41 +439,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.huigod.namenode.rpc.FetchEditsLogRequest)
+    // @@protoc_insertion_point(builder_scope:com.huigod.namenode.rpc.UpdateCheckpointTxidResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.huigod.namenode.rpc.FetchEditsLogRequest)
-  private static final FetchEditsLogRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.huigod.namenode.rpc.UpdateCheckpointTxidResponse)
+  private static final UpdateCheckpointTxidResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new FetchEditsLogRequest();
+    DEFAULT_INSTANCE = new UpdateCheckpointTxidResponse();
   }
 
-  public static FetchEditsLogRequest getDefaultInstance() {
+  public static UpdateCheckpointTxidResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<FetchEditsLogRequest>
-      PARSER = new com.google.protobuf.AbstractParser<FetchEditsLogRequest>() {
+  private static final com.google.protobuf.Parser<UpdateCheckpointTxidResponse>
+      PARSER = new com.google.protobuf.AbstractParser<UpdateCheckpointTxidResponse>() {
     @Override
-    public FetchEditsLogRequest parsePartialFrom(
+    public UpdateCheckpointTxidResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new FetchEditsLogRequest(input, extensionRegistry);
+      return new UpdateCheckpointTxidResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<FetchEditsLogRequest> parser() {
+  public static com.google.protobuf.Parser<UpdateCheckpointTxidResponse> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<FetchEditsLogRequest> getParserForType() {
+  public com.google.protobuf.Parser<UpdateCheckpointTxidResponse> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public FetchEditsLogRequest getDefaultInstanceForType() {
+  public UpdateCheckpointTxidResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

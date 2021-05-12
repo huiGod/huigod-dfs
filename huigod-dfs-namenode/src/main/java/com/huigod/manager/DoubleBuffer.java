@@ -37,7 +37,7 @@ public class DoubleBuffer {
   long startTxid = 1L;
 
   /**
-   * 已经输入磁盘中的txid范围
+   * 已经刷入磁盘中的txid范围
    */
   private List<String> flushedTxids = new CopyOnWriteArrayList<>();
 
@@ -195,5 +195,9 @@ public class DoubleBuffer {
     public byte[] getBufferData() {
       return buffer.toByteArray();
     }
+  }
+
+  public void addFlushedTxids(String flushedTxid) {
+    this.flushedTxids.add(flushedTxid);
   }
 }

@@ -2,8 +2,7 @@ package com.huigod.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huigod.entity.FSImage;
-import com.huigod.service.INode;
-import com.huigod.service.impl.INodeDirectory;
+import com.huigod.entity.INode;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -15,7 +14,7 @@ public class FSDirectory {
   /**
    * 内存中的文件目录树
    */
-  private INodeDirectory dirTree;
+  private INode dirTree;
 
   /**
    * 文件目录树的读写锁
@@ -28,7 +27,7 @@ public class FSDirectory {
   private long maxTxid = 0;
 
   public FSDirectory() {
-    this.dirTree = new INodeDirectory("/");
+    this.dirTree = new INode("/");
   }
 
   /**
@@ -42,20 +41,20 @@ public class FSDirectory {
       maxTxid = txid;
 
       String[] paths = path.split("/");
-      INodeDirectory parent = dirTree;
+      INode parent = dirTree;
 
       for (String splitPath : paths) {
         if ("".equals(splitPath.trim())) {
           continue;
         }
 
-        INodeDirectory dir = findDirectory(parent, splitPath);
+        INode dir = findDirectory(parent, splitPath);
         if (dir != null) {
           parent = dir;
           continue;
         }
 
-        INodeDirectory child = new INodeDirectory(splitPath);
+        INode child = new INode(splitPath);
         parent.addChild(child);
         parent = child;
       }
@@ -69,28 +68,28 @@ public class FSDirectory {
   /**
    * 打印目录树
    */
-  private void printDirTree(INodeDirectory dirTree, String blank) {
+  private void printDirTree(INode dirTree, String blank) {
     if (CollectionUtils.isEmpty(dirTree.getChildren())) {
       return;
     }
 
     for (INode dirTemp : dirTree.getChildren()) {
-      System.out.println(blank + ((INodeDirectory) dirTemp).getPath());
-      printDirTree((INodeDirectory) dirTemp, blank + " ");
+      System.out.println(blank + ((INode) dirTemp).getPath());
+      printDirTree((INode) dirTemp, blank + " ");
     }
   }
 
   /**
    * 对文件目录树递归查找目录
    */
-  private INodeDirectory findDirectory(INodeDirectory dir, String path) {
+  private INode findDirectory(INode dir, String path) {
     if (dir.getChildren().size() == 0) {
       return null;
     }
 
     for (INode child : dir.getChildren()) {
-      if (child instanceof INodeDirectory) {
-        INodeDirectory childDir = (INodeDirectory) child;
+      if (child instanceof INode) {
+        INode childDir = (INode) child;
 
         if ((childDir.getPath().equals(path))) {
           return childDir;
@@ -110,6 +109,7 @@ public class FSDirectory {
     FSImage fsimage;
 
     try {
+      //通过读写锁获取内存日志数据
       lock.readLock().lock();
       String fsimageJson = JSONObject.toJSONString(dirTree);
 
@@ -120,5 +120,13 @@ public class FSDirectory {
     }
 
     return fsimage;
+  }
+
+  public void setMaxTxid(long maxTxid) {
+    this.maxTxid = maxTxid;
+  }
+
+  public void setDirTree(INode dirTree) {
+    this.dirTree = dirTree;
   }
 }

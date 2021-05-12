@@ -1,6 +1,5 @@
 package com.huigod.service;
 
-import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -61,15 +60,5 @@ public class NameNodeOfferService {
    */
   public void shutdown(NameNodeServiceActor serviceActor) {
     this.serviceActors.remove(serviceActor);
-  }
-
-  /**
-   * 迭代遍历ServiceActor
-   */
-  public void iterateServiceActors() {
-    Iterator<NameNodeServiceActor> iterator = serviceActors.iterator();
-    while(iterator.hasNext()) {
-      iterator.next();
-    }
   }
 }

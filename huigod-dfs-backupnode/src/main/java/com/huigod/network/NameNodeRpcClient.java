@@ -3,6 +3,7 @@ package com.huigod.network;
 import com.alibaba.fastjson.JSONArray;
 import com.huigod.namenode.rpc.model.FetchEditsLogRequest;
 import com.huigod.namenode.rpc.model.FetchEditsLogResponse;
+import com.huigod.namenode.rpc.model.UpdateCheckpointTxidRequest;
 import com.huigod.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
@@ -18,6 +19,9 @@ public class NameNodeRpcClient {
 
   private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
 
+  private Boolean isNameNodeRunning = true;
+
+
   public NameNodeRpcClient() {
     ManagedChannel channel = NettyChannelBuilder
         .forAddress(NAMENODE_HOSTNAME, NAMENODE_PORT)
@@ -30,9 +34,9 @@ public class NameNodeRpcClient {
    * 抓取editslog数据
    * @return
    */
-  public JSONArray fetchEditsLog() {
+  public JSONArray fetchEditsLog(long syncedTxid) {
     FetchEditsLogRequest request = FetchEditsLogRequest.newBuilder()
-        .setCode(1)
+        .setSyncedTxid(syncedTxid)
         .build();
 
     FetchEditsLogResponse response = nameNode.fetchEditsLog(request);
@@ -41,4 +45,21 @@ public class NameNodeRpcClient {
     return JSONArray.parseArray(editsLogJson);
   }
 
+  /**
+   * 更新checkpoint txid
+   * @param txid
+   */
+  public void updateCheckpointTxid(long txid) {
+    UpdateCheckpointTxidRequest request = UpdateCheckpointTxidRequest.newBuilder()
+        .setTxid(txid)
+        .build();
+    nameNode.updateCheckpointTxid(request);
+  }
+
+  public Boolean isNameNodeRunning() {
+    return isNameNodeRunning;
+  }
+  public void setIsNameNodeRunning(Boolean isNameNodeRunning) {
+    this.isNameNodeRunning = isNameNodeRunning;
+  }
 }

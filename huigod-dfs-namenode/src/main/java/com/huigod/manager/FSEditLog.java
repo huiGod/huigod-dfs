@@ -2,8 +2,10 @@ package com.huigod.manager;
 
 
 import com.huigod.entity.EditLog;
+import java.io.File;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * 负责管理edits log日志的核心组件
@@ -15,6 +17,12 @@ public class FSEditLog {
    * 当前递增到的txid的序号
    */
   private long txidSeq = 0L;
+
+  /**
+   * editlog日志文件清理的时间间隔
+   */
+  private static final Long EDIT_LOG_CLEAN_INTERVAL = 30 * 1000L;
+
   /**
    * 内存双缓冲区
    */
@@ -35,6 +43,18 @@ public class FSEditLog {
    * 每个线程自己本地的txid副本
    */
   private ThreadLocal<Long> localTxid = new ThreadLocal<Long>();
+  /**
+   * 元数据管理组件
+   */
+  private FSNameSystem nameSystem;
+
+
+  public FSEditLog(FSNameSystem nameSystem) {
+    this.nameSystem = nameSystem;
+
+    EditLogCleaner editlogCleaner = new EditLogCleaner();
+    editlogCleaner.start();
+  }
 
   /**
    * 记录edits log日志
@@ -127,7 +147,6 @@ public class FSEditLog {
       notifyAll();
       //阻塞需要刷盘的其他线程
       isSyncRunning = true;
-
     }
 
     try {
@@ -164,6 +183,9 @@ public class FSEditLog {
     return doubleBuffer.getFlushedTxids();
   }
 
+  public void addFlushedTxids(long startTxid,long endTxid) {
+    doubleBuffer.addFlushedTxids(startTxid + "_" + endTxid);
+  }
 
   /**
    * 获取当前缓冲区里的数据
@@ -175,5 +197,47 @@ public class FSEditLog {
     synchronized (this) {
       return doubleBuffer.getBufferedEditsLog();
     }
+  }
+
+  /**
+   * 自动清理editlog文件
+   */
+  private class EditLogCleaner extends Thread {
+
+    @Override
+    public void run() {
+      log.info("editlog日志文件后台清理线程启动......");
+      try {
+        while (true) {
+          Thread.sleep(EDIT_LOG_CLEAN_INTERVAL);
+
+          List<String> flushedTxids = getFlushedTxids();
+          if (!CollectionUtils.isEmpty(flushedTxids)) {
+            long checkpointTxid = nameSystem.getCheckpointTxid();
+
+            for (String flushedTxid : flushedTxids) {
+              long startTxid = Long.parseLong(flushedTxid.split("_")[0]);
+              long endTxid = Long.parseLong(flushedTxid.split("_")[1]);
+
+              if (checkpointTxid >= endTxid) {
+                // 此时就要删除这个文件
+                File file = new File("logs/edits-" + startTxid + "-" + endTxid + ".log");
+                if (file.exists()) {
+                  file.delete();
+                  log.info("发现editlog日志文件不需要，进行删除:{}", file.getPath());
+                }
+              }
+            }
+          }
+
+        }
+      } catch (Exception e) {
+        log.error("EditLogCleaner run is error:", e);
+      }
+    }
+  }
+
+  public void setTxidSeq(long txidSeq) {
+    this.txidSeq = txidSeq;
   }
 }

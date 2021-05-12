@@ -1,21 +1,22 @@
 package com.huigod.manager;
 
-import com.huigod.service.INode;
-import com.huigod.service.impl.INodeDirectory;
+import com.huigod.entity.INode;
+import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * 负责管理内存中的文件目录树的核心组件
  */
+@Data
 public class FSDirectory {
 
   /**
    * 内存中的文件目录树
    */
-  private INodeDirectory dirTree;
+  private INode dirTree;
 
   public FSDirectory() {
-    this.dirTree = new INodeDirectory("/");
+    this.dirTree = new INode("/");
   }
 
   /**
@@ -25,20 +26,20 @@ public class FSDirectory {
     // path = /usr/warehouse/hive
     synchronized (dirTree) {
       String[] paths = path.split("/");
-      INodeDirectory parent = dirTree;
+      INode parent = dirTree;
 
       for (String splitPath : paths) {
         if ("".equals(splitPath.trim())) {
           continue;
         }
 
-        INodeDirectory dir = findDirectory(parent, splitPath);
+        INode dir = findDirectory(parent, splitPath);
         if (dir != null) {
           parent = dir;
           continue;
         }
 
-        INodeDirectory child = new INodeDirectory(splitPath);
+        INode child = new INode(splitPath);
         parent.addChild(child);
         parent = child;
       }
@@ -50,32 +51,29 @@ public class FSDirectory {
   /**
    * 打印目录树
    */
-  private void printDirTree(INodeDirectory dirTree, String blank) {
+  private void printDirTree(INode dirTree, String blank) {
     if (CollectionUtils.isEmpty(dirTree.getChildren())) {
       return;
     }
 
     for (INode dirTemp : dirTree.getChildren()) {
-      System.out.println(blank + ((INodeDirectory) dirTemp).getPath());
-      printDirTree((INodeDirectory) dirTemp, blank + " ");
+      System.out.println(blank + dirTemp.getPath());
+      printDirTree(dirTemp, blank + " ");
     }
   }
 
   /**
    * 对文件目录树递归查找目录
    */
-  private INodeDirectory findDirectory(INodeDirectory dir, String path) {
+  private INode findDirectory(INode dir, String path) {
     if (dir.getChildren().size() == 0) {
       return null;
     }
 
     for (INode child : dir.getChildren()) {
-      if (child instanceof INodeDirectory) {
-        INodeDirectory childDir = (INodeDirectory) child;
 
-        if ((childDir.getPath().equals(path))) {
-          return childDir;
-        }
+      if ((child.getPath().equals(path))) {
+        return child;
       }
     }
 

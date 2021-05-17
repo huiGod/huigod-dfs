@@ -74,6 +74,46 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_CreateFileRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_CreateFileResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_CreateFileResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_AllocateDataNodesRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_AllocateDataNodesResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -84,21 +124,34 @@ public final class NameNodeRpcModel {
   static {
     String[] descriptorData = {
       "\n\026NameNodeRpcModel.proto\022\027com.huigod.nam" +
-      "enode.rpc\"/\n\017RegisterRequest\022\n\n\002ip\030\001 \001(\t" +
-      "\022\020\n\010hostName\030\002 \001(\t\"\"\n\020RegisterResponse\022\016" +
-      "\n\006status\030\001 \001(\005\"0\n\020HeartbeatRequest\022\n\n\002ip" +
-      "\030\001 \001(\t\022\020\n\010hostName\030\002 \001(\t\"#\n\021HeartbeatRes" +
-      "ponse\022\016\n\006status\030\001 \001(\005\"\034\n\014MkdirRequest\022\014\n" +
-      "\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006status\030\001" +
-      " \001(\005\"\037\n\017ShutdownRequest\022\014\n\004code\030\001 \001(\005\"\"\n" +
-      "\020ShutdownResponse\022\016\n\006status\030\001 \001(\005\"8\n\024Fet" +
-      "chEditsLogRequest\022\014\n\004code\030\001 \001(\005\022\022\n\nsynce" +
-      "dTxid\030\002 \001(\003\")\n\025FetchEditsLogResponse\022\020\n\010" +
-      "editsLog\030\001 \001(\t\"+\n\033UpdateCheckpointTxidRe" +
-      "quest\022\014\n\004txid\030\001 \001(\003\".\n\034UpdateCheckpointT" +
-      "xidResponse\022\016\n\006status\030\001 \001(\005B3\n\035com.huigo" +
-      "d.namenode.rpc.modelB\020NameNodeRpcModelP\001" +
-      "b\006proto3"
+      "enode.rpc\"@\n\017RegisterRequest\022\n\n\002ip\030\001 \001(\t" +
+      "\022\020\n\010hostName\030\002 \001(\t\022\017\n\007nioPort\030\003 \001(\005\"\"\n\020R" +
+      "egisterResponse\022\016\n\006status\030\001 \001(\005\"A\n\020Heart" +
+      "beatRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostName\030\002 \001(" +
+      "\t\022\017\n\007nioPort\030\003 \001(\005\"5\n\021HeartbeatResponse\022" +
+      "\016\n\006status\030\001 \001(\005\022\020\n\010commands\030\002 \001(\t\"\034\n\014Mkd" +
+      "irRequest\022\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse" +
+      "\022\016\n\006status\030\001 \001(\005\"\037\n\017ShutdownRequest\022\014\n\004c" +
+      "ode\030\001 \001(\005\"\"\n\020ShutdownResponse\022\016\n\006status\030" +
+      "\001 \001(\005\"8\n\024FetchEditsLogRequest\022\014\n\004code\030\001 " +
+      "\001(\005\022\022\n\nsyncedTxid\030\002 \001(\003\")\n\025FetchEditsLog" +
+      "Response\022\020\n\010editsLog\030\001 \001(\t\"+\n\033UpdateChec" +
+      "kpointTxidRequest\022\014\n\004txid\030\001 \001(\003\".\n\034Updat" +
+      "eCheckpointTxidResponse\022\016\n\006status\030\001 \001(\005\"" +
+      "%\n\021CreateFileRequest\022\020\n\010filename\030\001 \001(\t\"$" +
+      "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005\">\n\030" +
+      "AllocateDataNodesRequest\022\020\n\010fileName\030\001 \001" +
+      "(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031AllocateDataNode" +
+      "sResponse\022\021\n\tdataNodes\030\001 \001(\t\"k\n ReportCo" +
+      "mpleteStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010" +
+      "hostName\030\002 \001(\t\022\021\n\tfilenames\030\003 \001(\t\022\026\n\016Sto" +
+      "redDataSize\030\004 \001(\003\"3\n!ReportCompleteStora" +
+      "geInfoResponse\022\016\n\006status\030\001 \001(\005\"N\n\034Inform" +
+      "ReplicaReceivedRequest\022\020\n\010hostname\030\001 \001(\t" +
+      "\022\n\n\002ip\030\002 \001(\t\022\020\n\010fileName\030\003 \001(\t\"/\n\035Inform" +
+      "ReplicaReceivedResponse\022\016\n\006status\030\001 \001(\005B" +
+      "3\n\035com.huigod.namenode.rpc.modelB\020NameNo" +
+      "deRpcModelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -109,7 +162,7 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_RegisterRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_RegisterRequest_descriptor,
-        new String[] { "Ip", "HostName", });
+        new String[] { "Ip", "HostName", "NioPort", });
     internal_static_com_huigod_namenode_rpc_RegisterResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_huigod_namenode_rpc_RegisterResponse_fieldAccessorTable = new
@@ -121,13 +174,13 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_HeartbeatRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_HeartbeatRequest_descriptor,
-        new String[] { "Ip", "HostName", });
+        new String[] { "Ip", "HostName", "NioPort", });
     internal_static_com_huigod_namenode_rpc_HeartbeatResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_huigod_namenode_rpc_HeartbeatResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_HeartbeatResponse_descriptor,
-        new String[] { "Status", });
+        new String[] { "Status", "Commands", });
     internal_static_com_huigod_namenode_rpc_MkdirRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_huigod_namenode_rpc_MkdirRequest_fieldAccessorTable = new
@@ -175,6 +228,54 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_UpdateCheckpointTxidResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_com_huigod_namenode_rpc_CreateFileRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor,
+        new String[] { "Filename", });
+    internal_static_com_huigod_namenode_rpc_CreateFileResponse_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_com_huigod_namenode_rpc_CreateFileResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_CreateFileResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesRequest_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_AllocateDataNodesRequest_descriptor,
+        new String[] { "FileName", "FileSize", });
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesResponse_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_com_huigod_namenode_rpc_AllocateDataNodesResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_AllocateDataNodesResponse_descriptor,
+        new String[] { "DataNodes", });
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_descriptor,
+        new String[] { "Ip", "HostName", "Filenames", "StoredDataSize", });
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_descriptor,
+        new String[] { "Hostname", "Ip", "FileName", });
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor,
         new String[] { "Status", });
   }
 

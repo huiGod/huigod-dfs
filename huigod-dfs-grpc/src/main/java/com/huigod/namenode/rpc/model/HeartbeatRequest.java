@@ -62,6 +62,11 @@ private static final long serialVersionUID = 0L;
             hostName_ = s;
             break;
           }
+          case 24: {
+
+            nioPort_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -166,6 +171,16 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int NIOPORT_FIELD_NUMBER = 3;
+  private int nioPort_;
+  /**
+   * <code>int32 nioPort = 3;</code>
+   * @return The nioPort.
+   */
+  public int getNioPort() {
+    return nioPort_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -186,6 +201,9 @@ private static final long serialVersionUID = 0L;
     if (!getHostNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostName_);
     }
+    if (nioPort_ != 0) {
+      output.writeInt32(3, nioPort_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -200,6 +218,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getHostNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostName_);
+    }
+    if (nioPort_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, nioPort_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -220,6 +242,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getIp())) return false;
     if (!getHostName()
         .equals(other.getHostName())) return false;
+    if (getNioPort()
+        != other.getNioPort()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -235,6 +259,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
     hash = (53 * hash) + getHostName().hashCode();
+    hash = (37 * hash) + NIOPORT_FIELD_NUMBER;
+    hash = (53 * hash) + getNioPort();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -372,6 +398,8 @@ private static final long serialVersionUID = 0L;
 
       hostName_ = "";
 
+      nioPort_ = 0;
+
       return this;
     }
 
@@ -400,6 +428,7 @@ private static final long serialVersionUID = 0L;
       HeartbeatRequest result = new HeartbeatRequest(this);
       result.ip_ = ip_;
       result.hostName_ = hostName_;
+      result.nioPort_ = nioPort_;
       onBuilt();
       return result;
     }
@@ -455,6 +484,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getHostName().isEmpty()) {
         hostName_ = other.hostName_;
         onChanged();
+      }
+      if (other.getNioPort() != 0) {
+        setNioPort(other.getNioPort());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -633,6 +665,36 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       hostName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int nioPort_ ;
+    /**
+     * <code>int32 nioPort = 3;</code>
+     * @return The nioPort.
+     */
+    public int getNioPort() {
+      return nioPort_;
+    }
+    /**
+     * <code>int32 nioPort = 3;</code>
+     * @param value The nioPort to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNioPort(int value) {
+      
+      nioPort_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 nioPort = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearNioPort() {
+      
+      nioPort_ = 0;
       onChanged();
       return this;
     }

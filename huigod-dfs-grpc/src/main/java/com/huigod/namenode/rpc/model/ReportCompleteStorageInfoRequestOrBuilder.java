@@ -3,8 +3,8 @@
 
 package com.huigod.namenode.rpc.model;
 
-public interface HeartbeatRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.huigod.namenode.rpc.HeartbeatRequest)
+public interface ReportCompleteStorageInfoRequestOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.huigod.namenode.rpc.ReportCompleteStorageInfoRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -32,8 +32,20 @@ public interface HeartbeatRequestOrBuilder extends
       getHostNameBytes();
 
   /**
-   * <code>int32 nioPort = 3;</code>
-   * @return The nioPort.
+   * <code>string filenames = 3;</code>
+   * @return The filenames.
    */
-  int getNioPort();
+  String getFilenames();
+  /**
+   * <code>string filenames = 3;</code>
+   * @return The bytes for filenames.
+   */
+  com.google.protobuf.ByteString
+      getFilenamesBytes();
+
+  /**
+   * <code>int64 StoredDataSize = 4;</code>
+   * @return The storedDataSize.
+   */
+  long getStoredDataSize();
 }

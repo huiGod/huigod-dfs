@@ -44,6 +44,19 @@ public class FSNameSystem {
   }
 
   /**
+   * 创建文件
+   * @param filename 文件名，包含所在的绝对路径，/products/img001.jpg
+   * @return
+   * @throws Exception
+   */
+  public Boolean create(long txid, String filename) throws Exception {
+    if(!directory.create(txid, filename)) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * 获取文件目录树的json
    *
    * @return

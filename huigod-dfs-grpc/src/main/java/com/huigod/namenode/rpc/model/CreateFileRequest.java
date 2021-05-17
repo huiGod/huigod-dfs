@@ -4,27 +4,26 @@
 package com.huigod.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.huigod.namenode.rpc.RegisterRequest}
+ * Protobuf type {@code com.huigod.namenode.rpc.CreateFileRequest}
  */
-public  final class RegisterRequest extends
+public  final class CreateFileRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.huigod.namenode.rpc.RegisterRequest)
-    RegisterRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.huigod.namenode.rpc.CreateFileRequest)
+    CreateFileRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use RegisterRequest.newBuilder() to construct.
-  private RegisterRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use CreateFileRequest.newBuilder() to construct.
+  private CreateFileRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private RegisterRequest() {
-    ip_ = "";
-    hostName_ = "";
+  private CreateFileRequest() {
+    filename_ = "";
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new RegisterRequest();
+    return new CreateFileRequest();
   }
 
   @Override
@@ -32,7 +31,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private RegisterRequest(
+  private CreateFileRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -53,18 +52,7 @@ private static final long serialVersionUID = 0L;
           case 10: {
             String s = input.readStringRequireUtf8();
 
-            ip_ = s;
-            break;
-          }
-          case 18: {
-            String s = input.readStringRequireUtf8();
-
-            hostName_ = s;
-            break;
-          }
-          case 24: {
-
-            nioPort_ = input.readInt32();
+            filename_ = s;
             break;
           }
           default: {
@@ -88,97 +76,51 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_RegisterRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_RegisterRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_CreateFileRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            RegisterRequest.class, Builder.class);
+            CreateFileRequest.class, Builder.class);
   }
 
-  public static final int IP_FIELD_NUMBER = 1;
-  private volatile Object ip_;
+  public static final int FILENAME_FIELD_NUMBER = 1;
+  private volatile Object filename_;
   /**
-   * <code>string ip = 1;</code>
-   * @return The ip.
+   * <code>string filename = 1;</code>
+   * @return The filename.
    */
-  public String getIp() {
-    Object ref = ip_;
+  public String getFilename() {
+    Object ref = filename_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
-      ip_ = s;
+      filename_ = s;
       return s;
     }
   }
   /**
-   * <code>string ip = 1;</code>
-   * @return The bytes for ip.
+   * <code>string filename = 1;</code>
+   * @return The bytes for filename.
    */
   public com.google.protobuf.ByteString
-      getIpBytes() {
-    Object ref = ip_;
+      getFilenameBytes() {
+    Object ref = filename_;
     if (ref instanceof String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
-      ip_ = b;
+      filename_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
-  }
-
-  public static final int HOSTNAME_FIELD_NUMBER = 2;
-  private volatile Object hostName_;
-  /**
-   * <code>string hostName = 2;</code>
-   * @return The hostName.
-   */
-  public String getHostName() {
-    Object ref = hostName_;
-    if (ref instanceof String) {
-      return (String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
-      hostName_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string hostName = 2;</code>
-   * @return The bytes for hostName.
-   */
-  public com.google.protobuf.ByteString
-      getHostNameBytes() {
-    Object ref = hostName_;
-    if (ref instanceof String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
-      hostName_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int NIOPORT_FIELD_NUMBER = 3;
-  private int nioPort_;
-  /**
-   * <code>int32 nioPort = 3;</code>
-   * @return The nioPort.
-   */
-  public int getNioPort() {
-    return nioPort_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -195,14 +137,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getIpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
-    }
-    if (!getHostNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostName_);
-    }
-    if (nioPort_ != 0) {
-      output.writeInt32(3, nioPort_);
+    if (!getFilenameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, filename_);
     }
     unknownFields.writeTo(output);
   }
@@ -213,15 +149,8 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getIpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
-    }
-    if (!getHostNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostName_);
-    }
-    if (nioPort_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, nioPort_);
+    if (!getFilenameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, filename_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -233,17 +162,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof RegisterRequest)) {
+    if (!(obj instanceof CreateFileRequest)) {
       return super.equals(obj);
     }
-    RegisterRequest other = (RegisterRequest) obj;
+    CreateFileRequest other = (CreateFileRequest) obj;
 
-    if (!getIp()
-        .equals(other.getIp())) return false;
-    if (!getHostName()
-        .equals(other.getHostName())) return false;
-    if (getNioPort()
-        != other.getNioPort()) return false;
+    if (!getFilename()
+        .equals(other.getFilename())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -255,80 +180,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + IP_FIELD_NUMBER;
-    hash = (53 * hash) + getIp().hashCode();
-    hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
-    hash = (53 * hash) + getHostName().hashCode();
-    hash = (37 * hash) + NIOPORT_FIELD_NUMBER;
-    hash = (53 * hash) + getNioPort();
+    hash = (37 * hash) + FILENAME_FIELD_NUMBER;
+    hash = (53 * hash) + getFilename().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static RegisterRequest parseFrom(byte[] data)
+  public static CreateFileRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static RegisterRequest parseFrom(java.io.InputStream input)
+  public static CreateFileRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static RegisterRequest parseDelimitedFrom(java.io.InputStream input)
+  public static CreateFileRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static RegisterRequest parseDelimitedFrom(
+  public static CreateFileRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static RegisterRequest parseFrom(
+  public static CreateFileRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -341,7 +262,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(RegisterRequest prototype) {
+  public static Builder newBuilder(CreateFileRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -357,26 +278,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.huigod.namenode.rpc.RegisterRequest}
+   * Protobuf type {@code com.huigod.namenode.rpc.CreateFileRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.huigod.namenode.rpc.RegisterRequest)
-      RegisterRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.huigod.namenode.rpc.CreateFileRequest)
+      CreateFileRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_RegisterRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_RegisterRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_CreateFileRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              RegisterRequest.class, Builder.class);
+              CreateFileRequest.class, Builder.class);
     }
 
-    // Construct using com.huigod.namenode.rpc.model.RegisterRequest.newBuilder()
+    // Construct using com.huigod.namenode.rpc.model.CreateFileRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -394,11 +315,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      ip_ = "";
-
-      hostName_ = "";
-
-      nioPort_ = 0;
+      filename_ = "";
 
       return this;
     }
@@ -406,17 +323,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_RegisterRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_huigod_namenode_rpc_CreateFileRequest_descriptor;
     }
 
     @Override
-    public RegisterRequest getDefaultInstanceForType() {
-      return RegisterRequest.getDefaultInstance();
+    public CreateFileRequest getDefaultInstanceForType() {
+      return CreateFileRequest.getDefaultInstance();
     }
 
     @Override
-    public RegisterRequest build() {
-      RegisterRequest result = buildPartial();
+    public CreateFileRequest build() {
+      CreateFileRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -424,11 +341,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public RegisterRequest buildPartial() {
-      RegisterRequest result = new RegisterRequest(this);
-      result.ip_ = ip_;
-      result.hostName_ = hostName_;
-      result.nioPort_ = nioPort_;
+    public CreateFileRequest buildPartial() {
+      CreateFileRequest result = new CreateFileRequest(this);
+      result.filename_ = filename_;
       onBuilt();
       return result;
     }
@@ -467,26 +382,19 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof RegisterRequest) {
-        return mergeFrom((RegisterRequest)other);
+      if (other instanceof CreateFileRequest) {
+        return mergeFrom((CreateFileRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(RegisterRequest other) {
-      if (other == RegisterRequest.getDefaultInstance()) return this;
-      if (!other.getIp().isEmpty()) {
-        ip_ = other.ip_;
+    public Builder mergeFrom(CreateFileRequest other) {
+      if (other == CreateFileRequest.getDefaultInstance()) return this;
+      if (!other.getFilename().isEmpty()) {
+        filename_ = other.filename_;
         onChanged();
-      }
-      if (!other.getHostName().isEmpty()) {
-        hostName_ = other.hostName_;
-        onChanged();
-      }
-      if (other.getNioPort() != 0) {
-        setNioPort(other.getNioPort());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -503,11 +411,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      RegisterRequest parsedMessage = null;
+      CreateFileRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (RegisterRequest) e.getUnfinishedMessage();
+        parsedMessage = (CreateFileRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -517,184 +425,78 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object ip_ = "";
+    private Object filename_ = "";
     /**
-     * <code>string ip = 1;</code>
-     * @return The ip.
+     * <code>string filename = 1;</code>
+     * @return The filename.
      */
-    public String getIp() {
-      Object ref = ip_;
+    public String getFilename() {
+      Object ref = filename_;
       if (!(ref instanceof String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
-        ip_ = s;
+        filename_ = s;
         return s;
       } else {
         return (String) ref;
       }
     }
     /**
-     * <code>string ip = 1;</code>
-     * @return The bytes for ip.
+     * <code>string filename = 1;</code>
+     * @return The bytes for filename.
      */
     public com.google.protobuf.ByteString
-        getIpBytes() {
-      Object ref = ip_;
+        getFilenameBytes() {
+      Object ref = filename_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
-        ip_ = b;
+        filename_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string ip = 1;</code>
-     * @param value The ip to set.
+     * <code>string filename = 1;</code>
+     * @param value The filename to set.
      * @return This builder for chaining.
      */
-    public Builder setIp(
+    public Builder setFilename(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      ip_ = value;
+      filename_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string ip = 1;</code>
+     * <code>string filename = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearIp() {
+    public Builder clearFilename() {
       
-      ip_ = getDefaultInstance().getIp();
+      filename_ = getDefaultInstance().getFilename();
       onChanged();
       return this;
     }
     /**
-     * <code>string ip = 1;</code>
-     * @param value The bytes for ip to set.
+     * <code>string filename = 1;</code>
+     * @param value The bytes for filename to set.
      * @return This builder for chaining.
      */
-    public Builder setIpBytes(
+    public Builder setFilenameBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      ip_ = value;
-      onChanged();
-      return this;
-    }
-
-    private Object hostName_ = "";
-    /**
-     * <code>string hostName = 2;</code>
-     * @return The hostName.
-     */
-    public String getHostName() {
-      Object ref = hostName_;
-      if (!(ref instanceof String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        hostName_ = s;
-        return s;
-      } else {
-        return (String) ref;
-      }
-    }
-    /**
-     * <code>string hostName = 2;</code>
-     * @return The bytes for hostName.
-     */
-    public com.google.protobuf.ByteString
-        getHostNameBytes() {
-      Object ref = hostName_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
-        hostName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string hostName = 2;</code>
-     * @param value The hostName to set.
-     * @return This builder for chaining.
-     */
-    public Builder setHostName(
-        String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      hostName_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string hostName = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearHostName() {
-      
-      hostName_ = getDefaultInstance().getHostName();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string hostName = 2;</code>
-     * @param value The bytes for hostName to set.
-     * @return This builder for chaining.
-     */
-    public Builder setHostNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      hostName_ = value;
-      onChanged();
-      return this;
-    }
-
-    private int nioPort_ ;
-    /**
-     * <code>int32 nioPort = 3;</code>
-     * @return The nioPort.
-     */
-    public int getNioPort() {
-      return nioPort_;
-    }
-    /**
-     * <code>int32 nioPort = 3;</code>
-     * @param value The nioPort to set.
-     * @return This builder for chaining.
-     */
-    public Builder setNioPort(int value) {
-      
-      nioPort_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 nioPort = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearNioPort() {
-      
-      nioPort_ = 0;
+      filename_ = value;
       onChanged();
       return this;
     }
@@ -711,41 +513,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.huigod.namenode.rpc.RegisterRequest)
+    // @@protoc_insertion_point(builder_scope:com.huigod.namenode.rpc.CreateFileRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:com.huigod.namenode.rpc.RegisterRequest)
-  private static final RegisterRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.huigod.namenode.rpc.CreateFileRequest)
+  private static final CreateFileRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new RegisterRequest();
+    DEFAULT_INSTANCE = new CreateFileRequest();
   }
 
-  public static RegisterRequest getDefaultInstance() {
+  public static CreateFileRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<RegisterRequest>
-      PARSER = new com.google.protobuf.AbstractParser<RegisterRequest>() {
+  private static final com.google.protobuf.Parser<CreateFileRequest>
+      PARSER = new com.google.protobuf.AbstractParser<CreateFileRequest>() {
     @Override
-    public RegisterRequest parsePartialFrom(
+    public CreateFileRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new RegisterRequest(input, extensionRegistry);
+      return new CreateFileRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<RegisterRequest> parser() {
+  public static com.google.protobuf.Parser<CreateFileRequest> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<RegisterRequest> getParserForType() {
+  public com.google.protobuf.Parser<CreateFileRequest> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public RegisterRequest getDefaultInstanceForType() {
+  public CreateFileRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

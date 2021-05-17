@@ -9,6 +9,7 @@ option java_outer_classname = "NameNodeRpcModel";
 message RegisterRequest {
   string ip = 1;
   string hostName = 2;
+  int32 nioPort = 3;
 }
 
 message RegisterResponse {
@@ -18,10 +19,12 @@ message RegisterResponse {
 message HeartbeatRequest {
   string ip = 1;
   string hostName = 2;
+  int32 nioPort = 3;
 }
 
 message HeartbeatResponse {
   int32 status = 1;
+  string commands = 2;
 }
 
 message MkdirRequest {
@@ -53,5 +56,42 @@ message UpdateCheckpointTxidRequest {
 }
 
 message UpdateCheckpointTxidResponse {
+  int32 status = 1;
+}
+
+message CreateFileRequest{
+  string filename = 1;
+}
+message CreateFileResponse{
+  int32 status = 1;
+}
+
+message AllocateDataNodesRequest {
+  string fileName = 1;
+  int64 fileSize = 2;
+}
+
+message AllocateDataNodesResponse {
+  string dataNodes = 1;
+}
+
+message ReportCompleteStorageInfoRequest {
+  string ip = 1;
+  string hostName = 2;
+  string filenames = 3;
+  int64  StoredDataSize = 4;
+}
+
+message ReportCompleteStorageInfoResponse {
+  int32 status = 1;
+}
+
+message InformReplicaReceivedRequest {
+  string hostname = 1;
+  string ip = 2;
+  string fileName = 3;
+}
+
+message InformReplicaReceivedResponse {
   int32 status = 1;
 }

@@ -2,8 +2,14 @@ package com.huigod.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.huigod.entity.Command;
+import com.huigod.entity.DataNodeInfo;
 import com.huigod.manager.DataNodeManager;
 import com.huigod.manager.FSNameSystem;
+import com.huigod.namenode.rpc.model.AllocateDataNodesRequest;
+import com.huigod.namenode.rpc.model.AllocateDataNodesResponse;
+import com.huigod.namenode.rpc.model.CreateFileRequest;
+import com.huigod.namenode.rpc.model.CreateFileResponse;
 import com.huigod.namenode.rpc.model.FetchEditsLogRequest;
 import com.huigod.namenode.rpc.model.FetchEditsLogResponse;
 import com.huigod.namenode.rpc.model.HeartbeatRequest;
@@ -21,6 +27,7 @@ import io.grpc.stub.StreamObserver;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +42,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   public static final Integer STATUS_SUCCESS = 1;
   public static final Integer STATUS_FAILURE = 2;
   public static final Integer STATUS_SHUTDOWN = 3;
+  public static final Integer STATUS_DUPLICATE = 4;
 
   public static final Integer BACKUP_NODE_FETCH_SIZE = 10;
 
@@ -81,11 +89,19 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
    */
   @Override
   public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver) {
-    datanodeManager.register(request.getIp(), request.getHostName());
+    Boolean result = datanodeManager.register(request.getIp(), request.getHostName(),request.getNioPort());
 
-    RegisterResponse response = RegisterResponse.newBuilder()
-        .setStatus(STATUS_SUCCESS)
-        .build();
+    RegisterResponse response;
+
+    if(result) {
+      response = RegisterResponse.newBuilder()
+          .setStatus(STATUS_SUCCESS)
+          .build();
+    } else {
+      response = RegisterResponse.newBuilder()
+          .setStatus(STATUS_FAILURE)
+          .build();
+    }
 
     responseObserver.onNext(response);
     responseObserver.onCompleted();
@@ -100,11 +116,31 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   @Override
   public void heartbeat(HeartbeatRequest request,
       StreamObserver<HeartbeatResponse> responseObserver) {
-    datanodeManager.heartbeat(request.getIp(), request.getHostName());
+    Boolean result = datanodeManager.heartbeat(request.getIp(), request.getHostName());
 
-    HeartbeatResponse response = HeartbeatResponse.newBuilder()
-        .setStatus(STATUS_SUCCESS)
-        .build();
+    HeartbeatResponse response = null;
+    List<Command> commands = new ArrayList<>();
+
+    //心跳成功直接返回
+    if(result) {
+      response = HeartbeatResponse.newBuilder()
+          .setStatus(STATUS_SUCCESS)
+          .setCommands(JSONArray.toJSONString(commands))
+          .build();
+    } else {
+      //心跳失败，发送重新注册和上报全量副本元数据命令
+      Command registerCommand = new Command(Command.REGISTER);
+      Command reportCompleteStorageInfoCommand = new Command(
+          Command.REPORT_COMPLETE_STORAGE_INFO);
+
+      commands.add(registerCommand);
+      commands.add(reportCompleteStorageInfoCommand);
+
+      response = HeartbeatResponse.newBuilder()
+          .setStatus(STATUS_FAILURE)
+          .setCommands(JSONArray.toJSONString(commands))
+          .build();
+    }
 
     responseObserver.onNext(response);
     responseObserver.onCompleted();
@@ -369,6 +405,61 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         .setStatus(1)
         .build();
 
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 创建文件
+   *
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void create(CreateFileRequest request,
+      StreamObserver<CreateFileResponse> responseObserver) {
+    CreateFileResponse response = null;
+
+    try {
+      if (!isRunning) {
+        response = CreateFileResponse.newBuilder()
+            .setStatus(STATUS_SHUTDOWN)
+            .build();
+      } else {
+        String filename = request.getFilename();
+        Boolean success = nameSystem.create(filename);
+        if (success) {
+          response = CreateFileResponse.newBuilder()
+              .setStatus(STATUS_SUCCESS)
+              .build();
+        } else {
+          response = CreateFileResponse.newBuilder()
+              .setStatus(STATUS_DUPLICATE)
+              .build();
+        }
+      }
+      responseObserver.onNext(response);
+      responseObserver.onCompleted();
+    } catch (Exception e) {
+      log.error("create file is error:", e);
+    }
+  }
+
+  /**
+   * 为文件上传请求分配多个数据节点来传输多个副本
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void allocateDataNodes(AllocateDataNodesRequest request,
+      StreamObserver<AllocateDataNodesResponse> responseObserver) {
+    long fileSize = request.getFileSize();
+    List<DataNodeInfo> dataNodes = datanodeManager.allocateDataNodes(fileSize);
+    String dataNodesJson = JSONArray.toJSONString(dataNodes);
+
+    AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder()
+        .setDataNodes(dataNodesJson)
+        .build();
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }

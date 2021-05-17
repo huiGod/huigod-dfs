@@ -15,5 +15,9 @@ service NameNodeService {
   rpc shutdown(ShutdownRequest) returns (ShutdownResponse);
   rpc fetchEditsLog(FetchEditsLogRequest) returns (FetchEditsLogResponse);
   rpc updateCheckpointTxid(UpdateCheckpointTxidRequest) returns (UpdateCheckpointTxidResponse);
+  rpc create(CreateFileRequest) returns (CreateFileResponse);
+  rpc allocateDataNodes(AllocateDataNodesRequest) returns (AllocateDataNodesResponse);
+  rpc reportCompleteStorageInfo(ReportCompleteStorageInfoRequest) returns (ReportCompleteStorageInfoResponse);
+  rpc informReplicaReceived(InformReplicaReceivedRequest) returns (InformReplicaReceivedResponse);
 }
 

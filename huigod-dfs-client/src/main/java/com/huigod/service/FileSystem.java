@@ -7,6 +7,7 @@ public interface FileSystem {
 
   /**
    * 创建目录
+   *
    * @param path 目录对应的路径
    * @throws Exception
    */
@@ -14,7 +15,17 @@ public interface FileSystem {
 
   /**
    * 优雅关闭
+   *
    * @throws Exception
    */
   void shutdown() throws Exception;
+
+  /**
+   * 上传文件
+   *
+   * @param file     文件的字节数组
+   * @param filename 文件名
+   * @throws Exception
+   */
+  Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
 }

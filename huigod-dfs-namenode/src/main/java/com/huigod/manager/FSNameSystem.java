@@ -2,6 +2,7 @@ package com.huigod.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huigod.entity.INode;
+import com.huigod.service.impl.EditLogFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,7 +52,7 @@ public class FSNameSystem {
    */
   public Boolean mkdir(String path) throws Exception {
     this.directory.mkdir(path);
-    this.editLog.logEdit("{'OP':'MKDIR','PATH':'" + path + "'}");
+    this.editLog.logEdit(EditLogFactory.mkdir(path));
     return true;
   }
 
@@ -72,8 +73,8 @@ public class FSNameSystem {
   }
 
   /**
-   * 接受到BackupNode通知的fsimage对应的checkpoint txid
-   * 触发一次持久化，让重启后能够对应恢复
+   * 接受到BackupNode通知的fsimage对应的checkpoint txid 触发一次持久化，让重启后能够对应恢复
+   *
    * @param txid
    */
   public void setCheckpointTxid(long txid) {
@@ -293,7 +294,14 @@ public class FSNameSystem {
                 try {
                   directory.mkdir(path);
                 } catch (Exception e) {
-                  e.printStackTrace();
+                  log.error("mkdir is error:", e);
+                }
+              } else if (op.equals("CREATE")) {
+                String path = editLogMap.getString("PATH");
+                try {
+                  directory.create(path);
+                } catch (Exception e) {
+                  log.error("create is error:", e);
                 }
               }
             }
@@ -303,4 +311,18 @@ public class FSNameSystem {
     }
   }
 
+  /**
+   * 创建文件
+   *
+   * @param filename 文件名，包含所在的绝对路径，/products/img001.jpg
+   * @return
+   * @throws Exception
+   */
+  public Boolean create(String filename) {
+    if (!directory.create(filename)) {
+      return false;
+    }
+    editLog.logEdit(EditLogFactory.create(filename));
+    return true;
+  }
 }

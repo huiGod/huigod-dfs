@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\027com.huigod.na" +
-      "menode.rpc\032\026NameNodeRpcModel.proto2\205\005\n\017N" +
+      "menode.rpc\032\026NameNodeRpcModel.proto2\202\t\n\017N" +
       "ameNodeService\022_\n\010register\022(.com.huigod." +
       "namenode.rpc.RegisterRequest\032).com.huigo" +
       "d.namenode.rpc.RegisterResponse\022b\n\theart" +
@@ -41,8 +41,21 @@ public final class NameNodeServer {
       "heckpointTxid\0224.com.huigod.namenode.rpc." +
       "UpdateCheckpointTxidRequest\0325.com.huigod" +
       ".namenode.rpc.UpdateCheckpointTxidRespon" +
-      "seB3\n\037com.huigod.namenode.rpc.serviceB\016N" +
-      "ameNodeServerP\001b\006proto3"
+      "se\022a\n\006create\022*.com.huigod.namenode.rpc.C" +
+      "reateFileRequest\032+.com.huigod.namenode.r" +
+      "pc.CreateFileResponse\022z\n\021allocateDataNod" +
+      "es\0221.com.huigod.namenode.rpc.AllocateDat" +
+      "aNodesRequest\0322.com.huigod.namenode.rpc." +
+      "AllocateDataNodesResponse\022\222\001\n\031reportComp" +
+      "leteStorageInfo\0229.com.huigod.namenode.rp" +
+      "c.ReportCompleteStorageInfoRequest\032:.com" +
+      ".huigod.namenode.rpc.ReportCompleteStora" +
+      "geInfoResponse\022\206\001\n\025informReplicaReceived" +
+      "\0225.com.huigod.namenode.rpc.InformReplica" +
+      "ReceivedRequest\0326.com.huigod.namenode.rp" +
+      "c.InformReplicaReceivedResponseB3\n\037com.h" +
+      "uigod.namenode.rpc.serviceB\016NameNodeServ" +
+      "erP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -2,6 +2,10 @@ package com.huigod;
 
 import com.huigod.service.FileSystem;
 import com.huigod.service.impl.FileSystemImpl;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import org.junit.Test;
 
 /**
@@ -46,5 +50,28 @@ public class AppTest {
   public void testShutDown() throws Exception {
     FileSystem fileSystem = new FileSystemImpl();
     fileSystem.shutdown();
+  }
+
+  @Test
+  public void testUpload() throws Exception {
+    FileSystem fileSystem = new FileSystemImpl();
+    File file = new File("test.txt");
+    FileInputStream in = null;
+    FileChannel fileChannel = null;
+    try {
+      in = new FileInputStream(file);
+      fileChannel = in.getChannel();
+
+      ByteBuffer buffer = ByteBuffer.allocate(1024);
+
+      fileChannel.read(buffer);
+      buffer.flip();
+      fileSystem.upload(buffer.array(), "/root/test3.txt",11);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      fileChannel.close();
+      in.close();
+    }
   }
 }

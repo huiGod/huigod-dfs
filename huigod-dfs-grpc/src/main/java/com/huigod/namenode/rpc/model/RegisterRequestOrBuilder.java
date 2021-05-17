@@ -30,4 +30,10 @@ public interface RegisterRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getHostNameBytes();
+
+  /**
+   * <code>int32 nioPort = 3;</code>
+   * @return The nioPort.
+   */
+  int getNioPort();
 }

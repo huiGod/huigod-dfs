@@ -27,6 +27,11 @@ public class DataNodeServer {
   private StorageManager storageManager;
 
   /**
+   * 复制任务管理组件
+   */
+  private ReplicateManager replicateManager;
+
+  /**
    * 初始化DataNode
    */
   public DataNodeServer() throws Exception {
@@ -44,9 +49,11 @@ public class DataNodeServer {
       log.info("不需要全量上报存储信息......");
     }
 
+    this.replicateManager = new ReplicateManager(this.nameNodeRpcClient);
+
     //心跳机制，可以接收NameNode发送的命令执行对应逻辑
     this.heartbeatManager = new HeartbeatManager(
-        this.nameNodeRpcClient, this.storageManager);
+        this.nameNodeRpcClient, this.storageManager, this.replicateManager);
     this.heartbeatManager.start();
 
     //接收客户端连接处理

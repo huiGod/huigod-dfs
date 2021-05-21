@@ -74,7 +74,7 @@ public class FSDirectory {
     }
 
     for (INode dirTemp : dirTree.getChildren()) {
-      System.out.println(blank + ((INode) dirTemp).getPath());
+      log.info(blank + ((INode) dirTemp).getPath());
       printDirTree((INode) dirTemp, blank + " ");
     }
   }

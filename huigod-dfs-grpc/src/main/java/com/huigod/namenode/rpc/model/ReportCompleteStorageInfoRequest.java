@@ -74,6 +74,11 @@ private static final long serialVersionUID = 0L;
             storedDataSize_ = input.readInt64();
             break;
           }
+          case 40: {
+
+            fileLength_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -224,6 +229,16 @@ private static final long serialVersionUID = 0L;
     return storedDataSize_;
   }
 
+  public static final int FILELENGTH_FIELD_NUMBER = 5;
+  private long fileLength_;
+  /**
+   * <code>int64 fileLength = 5;</code>
+   * @return The fileLength.
+   */
+  public long getFileLength() {
+    return fileLength_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -250,6 +265,9 @@ private static final long serialVersionUID = 0L;
     if (storedDataSize_ != 0L) {
       output.writeInt64(4, storedDataSize_);
     }
+    if (fileLength_ != 0L) {
+      output.writeInt64(5, fileLength_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -271,6 +289,10 @@ private static final long serialVersionUID = 0L;
     if (storedDataSize_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(4, storedDataSize_);
+    }
+    if (fileLength_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(5, fileLength_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -295,6 +317,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getFilenames())) return false;
     if (getStoredDataSize()
         != other.getStoredDataSize()) return false;
+    if (getFileLength()
+        != other.getFileLength()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -315,6 +339,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + STOREDDATASIZE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getStoredDataSize());
+    hash = (37 * hash) + FILELENGTH_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getFileLength());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -456,6 +483,8 @@ private static final long serialVersionUID = 0L;
 
       storedDataSize_ = 0L;
 
+      fileLength_ = 0L;
+
       return this;
     }
 
@@ -486,6 +515,7 @@ private static final long serialVersionUID = 0L;
       result.hostName_ = hostName_;
       result.filenames_ = filenames_;
       result.storedDataSize_ = storedDataSize_;
+      result.fileLength_ = fileLength_;
       onBuilt();
       return result;
     }
@@ -548,6 +578,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getStoredDataSize() != 0L) {
         setStoredDataSize(other.getStoredDataSize());
+      }
+      if (other.getFileLength() != 0L) {
+        setFileLength(other.getFileLength());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -832,6 +865,36 @@ private static final long serialVersionUID = 0L;
     public Builder clearStoredDataSize() {
       
       storedDataSize_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long fileLength_ ;
+    /**
+     * <code>int64 fileLength = 5;</code>
+     * @return The fileLength.
+     */
+    public long getFileLength() {
+      return fileLength_;
+    }
+    /**
+     * <code>int64 fileLength = 5;</code>
+     * @param value The fileLength to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileLength(long value) {
+      
+      fileLength_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 fileLength = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileLength() {
+      
+      fileLength_ = 0L;
       onChanged();
       return this;
     }

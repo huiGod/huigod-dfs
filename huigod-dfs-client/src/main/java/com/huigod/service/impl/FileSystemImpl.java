@@ -7,6 +7,8 @@ import com.huigod.namenode.rpc.model.AllocateDataNodesRequest;
 import com.huigod.namenode.rpc.model.AllocateDataNodesResponse;
 import com.huigod.namenode.rpc.model.CreateFileRequest;
 import com.huigod.namenode.rpc.model.CreateFileResponse;
+import com.huigod.namenode.rpc.model.GetDataNodeForFileRequest;
+import com.huigod.namenode.rpc.model.GetDataNodeForFileResponse;
 import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
 import com.huigod.namenode.rpc.model.ShutdownRequest;
@@ -29,6 +31,8 @@ public class FileSystemImpl implements FileSystem {
   private static final String NAMENODE_HOSTNAME = "localhost";
   private static final Integer NAMENODE_PORT = 50070;
 
+  private NIOClient nioClient;
+
   private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
 
   public FileSystemImpl() {
@@ -37,6 +41,7 @@ public class FileSystemImpl implements FileSystem {
         .negotiationType(NegotiationType.PLAINTEXT)
         .build();
     this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
+    this.nioClient = new NIOClient();
   }
 
   /**
@@ -82,13 +87,16 @@ public class FileSystemImpl implements FileSystem {
       return false;
     }
 
+    log.info("在文件目录树中成功创建该文件......");
+
+
     //调用NameUpNode来获取负载均衡后的DataNode节点
     String dataNodesJson = this.allocateDataNodes(fileName, fileSize);
     log.info("upload file allocate DataNodes:{}", dataNodesJson);
 
     //依次将文件上传到dataNode上，需要考虑容错机制
     JSONArray dataNodes = JSONArray.parseArray(dataNodesJson);
-    for(int i = 0; i < dataNodes.size(); i++) {
+    for (int i = 0; i < dataNodes.size(); i++) {
       JSONObject datanode = dataNodes.getJSONObject(i);
       String hostname = datanode.getString("hostname");
       int nioPort = datanode.getIntValue("nioPort");
@@ -115,6 +123,7 @@ public class FileSystemImpl implements FileSystem {
 
   /**
    * 分配双副本对应的数据节点
+   *
    * @param fileName
    * @param fileSize
    * @return
@@ -127,5 +136,41 @@ public class FileSystemImpl implements FileSystem {
 
     AllocateDataNodesResponse response = nameNode.allocateDataNodes(request);
     return response.getDataNodes();
+  }
+
+  /**
+   * 下载文件
+   *
+   * @param filename 文件名
+   * @return
+   * @throws Exception
+   */
+  @Override
+  public byte[] download(String filename) throws Exception {
+    // 1.调用NameNode获取文件副本所在的DataNode
+    JSONObject datanode = getDataNodeForFile(filename);
+    log.info("Master分配用来下载文件的数据节点：" + datanode.toJSONString());
+
+    // 2.打开一个针对那个DataNode的网络连接，发送文件名过去
+    // 3.尝试从连接中读取对方传输过来的文件
+    // 4.读取到文件之后不需要写入本地的磁盘中，而是转换为一个字节数组返回即可
+
+    String hostname = datanode.getString("hostname");
+    Integer nioPort = datanode.getInteger("nioPort");
+    return nioClient.readFile(hostname, nioPort, filename);
+  }
+
+  /**
+   * 获取文件的某个副本所在的机器
+   *
+   * @param filename
+   * @return
+   */
+  private JSONObject getDataNodeForFile(String filename) {
+    GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder()
+        .setFileName(filename)
+        .build();
+    GetDataNodeForFileResponse response = nameNode.getDataNodeForFile(request);
+    return JSONObject.parseObject(response.getDatanodeInfo());
   }
 }

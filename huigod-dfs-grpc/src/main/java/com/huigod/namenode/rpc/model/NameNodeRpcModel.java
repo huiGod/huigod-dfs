@@ -114,6 +114,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -142,16 +152,19 @@ public final class NameNodeRpcModel {
       "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005\">\n\030" +
       "AllocateDataNodesRequest\022\020\n\010fileName\030\001 \001" +
       "(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031AllocateDataNode" +
-      "sResponse\022\021\n\tdataNodes\030\001 \001(\t\"k\n ReportCo" +
+      "sResponse\022\021\n\tdataNodes\030\001 \001(\t\"\177\n ReportCo" +
       "mpleteStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010" +
       "hostName\030\002 \001(\t\022\021\n\tfilenames\030\003 \001(\t\022\026\n\016Sto" +
-      "redDataSize\030\004 \001(\003\"3\n!ReportCompleteStora" +
-      "geInfoResponse\022\016\n\006status\030\001 \001(\005\"N\n\034Inform" +
-      "ReplicaReceivedRequest\022\020\n\010hostname\030\001 \001(\t" +
-      "\022\n\n\002ip\030\002 \001(\t\022\020\n\010fileName\030\003 \001(\t\"/\n\035Inform" +
-      "ReplicaReceivedResponse\022\016\n\006status\030\001 \001(\005B" +
-      "3\n\035com.huigod.namenode.rpc.modelB\020NameNo" +
-      "deRpcModelP\001b\006proto3"
+      "redDataSize\030\004 \001(\003\022\022\n\nfileLength\030\005 \001(\003\"3\n" +
+      "!ReportCompleteStorageInfoResponse\022\016\n\006st" +
+      "atus\030\001 \001(\005\"b\n\034InformReplicaReceivedReque" +
+      "st\022\020\n\010hostname\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\022\020\n\010file" +
+      "Name\030\003 \001(\t\022\022\n\nfileLength\030\004 \001(\003\"/\n\035Inform" +
+      "ReplicaReceivedResponse\022\016\n\006status\030\001 \001(\005\"" +
+      "-\n\031GetDataNodeForFileRequest\022\020\n\010fileName" +
+      "\030\001 \001(\t\"2\n\032GetDataNodeForFileResponse\022\024\n\014" +
+      "datanodeInfo\030\001 \001(\tB3\n\035com.huigod.namenod" +
+      "e.rpc.modelB\020NameNodeRpcModelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -258,7 +271,7 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_descriptor,
-        new String[] { "Ip", "HostName", "Filenames", "StoredDataSize", });
+        new String[] { "Ip", "HostName", "Filenames", "StoredDataSize", "FileLength", });
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(17);
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_fieldAccessorTable = new
@@ -270,13 +283,25 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_descriptor,
-        new String[] { "Hostname", "Ip", "FileName", });
+        new String[] { "Hostname", "Ip", "FileName", "FileLength", });
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor =
       getDescriptor().getMessageTypes().get(19);
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor,
         new String[] { "Status", });
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileRequest_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_GetDataNodeForFileRequest_descriptor,
+        new String[] { "FileName", });
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_descriptor =
+      getDescriptor().getMessageTypes().get(21);
+    internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_descriptor,
+        new String[] { "DatanodeInfo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

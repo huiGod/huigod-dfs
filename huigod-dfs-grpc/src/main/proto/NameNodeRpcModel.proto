@@ -95,3 +95,11 @@ message InformReplicaReceivedRequest {
 message InformReplicaReceivedResponse {
   int32 status = 1;
 }
+
+message GetDataNodeForFileRequest {
+  string fileName = 1;
+}
+
+message GetDataNodeForFileResponse {
+  string datanodeInfo = 1;
+}

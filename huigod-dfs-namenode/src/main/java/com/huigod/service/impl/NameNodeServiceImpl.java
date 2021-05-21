@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.huigod.entity.Command;
 import com.huigod.entity.DataNodeInfo;
+import com.huigod.entity.RemoveReplicaTask;
+import com.huigod.entity.ReplicateTask;
 import com.huigod.manager.DataNodeManager;
 import com.huigod.manager.FSNameSystem;
 import com.huigod.namenode.rpc.model.AllocateDataNodesRequest;
@@ -12,12 +14,18 @@ import com.huigod.namenode.rpc.model.CreateFileRequest;
 import com.huigod.namenode.rpc.model.CreateFileResponse;
 import com.huigod.namenode.rpc.model.FetchEditsLogRequest;
 import com.huigod.namenode.rpc.model.FetchEditsLogResponse;
+import com.huigod.namenode.rpc.model.GetDataNodeForFileRequest;
+import com.huigod.namenode.rpc.model.GetDataNodeForFileResponse;
 import com.huigod.namenode.rpc.model.HeartbeatRequest;
 import com.huigod.namenode.rpc.model.HeartbeatResponse;
+import com.huigod.namenode.rpc.model.InformReplicaReceivedRequest;
+import com.huigod.namenode.rpc.model.InformReplicaReceivedResponse;
 import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
 import com.huigod.namenode.rpc.model.RegisterRequest;
 import com.huigod.namenode.rpc.model.RegisterResponse;
+import com.huigod.namenode.rpc.model.ReportCompleteStorageInfoRequest;
+import com.huigod.namenode.rpc.model.ReportCompleteStorageInfoResponse;
 import com.huigod.namenode.rpc.model.ShutdownRequest;
 import com.huigod.namenode.rpc.model.ShutdownResponse;
 import com.huigod.namenode.rpc.model.UpdateCheckpointTxidRequest;
@@ -89,11 +97,12 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
    */
   @Override
   public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver) {
-    Boolean result = datanodeManager.register(request.getIp(), request.getHostName(),request.getNioPort());
+    Boolean result = datanodeManager
+        .register(request.getIp(), request.getHostName(), request.getNioPort());
 
     RegisterResponse response;
 
-    if(result) {
+    if (result) {
       response = RegisterResponse.newBuilder()
           .setStatus(STATUS_SUCCESS)
           .build();
@@ -116,13 +125,34 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
   @Override
   public void heartbeat(HeartbeatRequest request,
       StreamObserver<HeartbeatResponse> responseObserver) {
-    Boolean result = datanodeManager.heartbeat(request.getIp(), request.getHostName());
+    String ip = request.getIp();
+    String hostName = request.getHostName();
+    Boolean result = datanodeManager.heartbeat(ip, hostName);
 
     HeartbeatResponse response = null;
     List<Command> commands = new ArrayList<>();
 
     //心跳成功直接返回
-    if(result) {
+    if (result) {
+      //需要查看是否有复制副本任务，如果有则分发给DataNode节点
+      DataNodeInfo datanode = datanodeManager.getDatanode(ip, hostName);
+
+      ReplicateTask replicateTask;
+      while ((replicateTask = datanode.pollReplicateTask()) != null) {
+        Command replicateCommand = new Command(Command.REPLICATE);
+        replicateCommand.setContent(JSONObject.toJSONString(replicateTask));
+        commands.add(replicateCommand);
+      }
+
+      RemoveReplicaTask removeReplicaTask;
+      while ((removeReplicaTask = datanode.pollRemoveReplicaTask()) != null) {
+        Command removeReplicaCommand = new Command(Command.REMOVE_REPLICA);
+        removeReplicaCommand.setContent(JSONObject.toJSONString(removeReplicaTask));
+        commands.add(removeReplicaCommand);
+      }
+
+      log.info("接收到数据节点【" + datanode + "】的心跳，他的命令列表为：" + commands);
+
       response = HeartbeatResponse.newBuilder()
           .setStatus(STATUS_SUCCESS)
           .setCommands(JSONArray.toJSONString(commands))
@@ -447,6 +477,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
   /**
    * 为文件上传请求分配多个数据节点来传输多个副本
+   *
    * @param request
    * @param responseObserver
    */
@@ -459,6 +490,89 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
     AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder()
         .setDataNodes(dataNodesJson)
+        .build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 上报全量副本存储信息
+   *
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void reportCompleteStorageInfo(ReportCompleteStorageInfoRequest request,
+      StreamObserver<ReportCompleteStorageInfoResponse> responseObserver) {
+    String ip = request.getIp();
+    String hostname = request.getHostName();
+    String filenamesJson = request.getFilenames();
+    Long storedDataSize = request.getStoredDataSize();
+
+    datanodeManager.setStoredDataSize(ip, hostname, storedDataSize);
+
+    JSONArray filenames = JSONArray.parseArray(filenamesJson);
+    for (int i = 0; i < filenames.size(); i++) {
+      String filename = filenames.getString(i);
+      nameSystem.addReceivedReplica(hostname, ip,
+          filename.split("_")[0], Long.parseLong(filename.split("_")[1]));
+    }
+
+    ReportCompleteStorageInfoResponse response = ReportCompleteStorageInfoResponse.newBuilder()
+        .setStatus(STATUS_SUCCESS)
+        .build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 副本数据上报增量数据
+   *
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void informReplicaReceived(InformReplicaReceivedRequest request,
+      StreamObserver<InformReplicaReceivedResponse> responseObserver) {
+    String hostname = request.getHostname();
+    String ip = request.getIp();
+    String filename = request.getFileName();
+
+    InformReplicaReceivedResponse response;
+
+    try {
+      nameSystem.addReceivedReplica(hostname, ip,
+          filename.split("_")[0], Long.parseLong(filename.split("_")[1]));
+
+      response = InformReplicaReceivedResponse.newBuilder()
+          .setStatus(STATUS_SUCCESS)
+          .build();
+    } catch (Exception e) {
+      log.error("informReplicaReceived is error:", e);
+
+      response = InformReplicaReceivedResponse.newBuilder()
+          .setStatus(STATUS_FAILURE)
+          .build();
+    }
+
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 获取文件的某个副本所在的DataNode
+   *
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void getDataNodeForFile(GetDataNodeForFileRequest request,
+      StreamObserver<GetDataNodeForFileResponse> responseObserver) {
+    String filename = request.getFileName();
+    DataNodeInfo datanode = nameSystem.getDataNodeForFile(filename);
+
+    GetDataNodeForFileResponse response = GetDataNodeForFileResponse.newBuilder()
+        .setDatanodeInfo(JSONObject.toJSONString(datanode))
         .build();
     responseObserver.onNext(response);
     responseObserver.onCompleted();

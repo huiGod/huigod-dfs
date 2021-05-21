@@ -57,7 +57,7 @@ public class FSDirectory {
     }
 
     for (INode dirTemp : dirTree.getChildren()) {
-      System.out.println(blank + dirTemp.getPath());
+      log.info(blank + dirTemp.getPath());
       printDirTree(dirTemp, blank + " ");
     }
   }
@@ -121,7 +121,7 @@ public class FSDirectory {
       INode file = new INode(realFilename);
       parent.addChild(file);
 
-      //System.out.println(dirTree);
+      //log.info(dirTree);
 
       return true;
     }

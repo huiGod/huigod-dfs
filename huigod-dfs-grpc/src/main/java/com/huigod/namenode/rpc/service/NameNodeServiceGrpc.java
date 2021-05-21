@@ -339,6 +339,38 @@ public final class NameNodeServiceGrpc {
      return getInformReplicaReceivedMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.GetDataNodeForFileRequest,
+      com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "getDataNodeForFile",
+      requestType = com.huigod.namenode.rpc.model.GetDataNodeForFileRequest.class,
+      responseType = com.huigod.namenode.rpc.model.GetDataNodeForFileResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.GetDataNodeForFileRequest,
+      com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.GetDataNodeForFileRequest, com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod;
+    if ((getGetDataNodeForFileMethod = NameNodeServiceGrpc.getGetDataNodeForFileMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getGetDataNodeForFileMethod = NameNodeServiceGrpc.getGetDataNodeForFileMethod) == null) {
+          NameNodeServiceGrpc.getGetDataNodeForFileMethod = getGetDataNodeForFileMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.GetDataNodeForFileRequest, com.huigod.namenode.rpc.model.GetDataNodeForFileResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "getDataNodeForFile"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.GetDataNodeForFileRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.GetDataNodeForFileResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("getDataNodeForFile"))
+                  .build();
+          }
+        }
+     }
+     return getGetDataNodeForFileMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -436,6 +468,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getInformReplicaReceivedMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void getDataNodeForFile(com.huigod.namenode.rpc.model.GetDataNodeForFileRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetDataNodeForFileMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -508,6 +547,13 @@ public final class NameNodeServiceGrpc {
                 com.huigod.namenode.rpc.model.InformReplicaReceivedRequest,
                 com.huigod.namenode.rpc.model.InformReplicaReceivedResponse>(
                   this, METHODID_INFORM_REPLICA_RECEIVED)))
+          .addMethod(
+            getGetDataNodeForFileMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.GetDataNodeForFileRequest,
+                com.huigod.namenode.rpc.model.GetDataNodeForFileResponse>(
+                  this, METHODID_GET_DATA_NODE_FOR_FILE)))
           .build();
     }
   }
@@ -609,6 +655,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getInformReplicaReceivedMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getDataNodeForFile(com.huigod.namenode.rpc.model.GetDataNodeForFileRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -697,6 +751,13 @@ public final class NameNodeServiceGrpc {
     public com.huigod.namenode.rpc.model.InformReplicaReceivedResponse informReplicaReceived(com.huigod.namenode.rpc.model.InformReplicaReceivedRequest request) {
       return blockingUnaryCall(
           getChannel(), getInformReplicaReceivedMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.GetDataNodeForFileResponse getDataNodeForFile(com.huigod.namenode.rpc.model.GetDataNodeForFileRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getGetDataNodeForFileMethod(), getCallOptions(), request);
     }
   }
 
@@ -797,6 +858,14 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getInformReplicaReceivedMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.GetDataNodeForFileResponse> getDataNodeForFile(
+        com.huigod.namenode.rpc.model.GetDataNodeForFileRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -809,6 +878,7 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_ALLOCATE_DATA_NODES = 7;
   private static final int METHODID_REPORT_COMPLETE_STORAGE_INFO = 8;
   private static final int METHODID_INFORM_REPLICA_RECEIVED = 9;
+  private static final int METHODID_GET_DATA_NODE_FOR_FILE = 10;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -866,6 +936,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_INFORM_REPLICA_RECEIVED:
           serviceImpl.informReplicaReceived((com.huigod.namenode.rpc.model.InformReplicaReceivedRequest) request,
               (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.InformReplicaReceivedResponse>) responseObserver);
+          break;
+        case METHODID_GET_DATA_NODE_FOR_FILE:
+          serviceImpl.getDataNodeForFile((com.huigod.namenode.rpc.model.GetDataNodeForFileRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.GetDataNodeForFileResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -938,6 +1012,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getAllocateDataNodesMethod())
               .addMethod(getReportCompleteStorageInfoMethod())
               .addMethod(getInformReplicaReceivedMethod())
+              .addMethod(getGetDataNodeForFileMethod())
               .build();
         }
       }

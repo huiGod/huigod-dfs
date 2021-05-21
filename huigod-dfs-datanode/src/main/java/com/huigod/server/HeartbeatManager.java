@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.huigod.entity.StorageInfo;
 import com.huigod.namenode.rpc.model.HeartbeatResponse;
+import com.huigod.util.FileUtils;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,16 +14,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HeartbeatManager {
 
-  public static final Integer REGISTER = 1;
-  public static final Integer REPORT_COMPLETE_STORAGE_INFO = 2;
+  public static final Integer SUCCESS = 1;
+  public static final Integer FAILURE = 2;
+  public static final Integer COMMAND_REGISTER = 1;
+  public static final Integer COMMAND_REPORT_COMPLETE_STORAGE_INFO = 2;
+  public static final Integer COMMAND_REPLICATE = 3;
+  public static final Integer COMMAND_REMOVE_REPLICA = 4;
 
   private NameNodeRpcClient namenodeRpcClient;
   private StorageManager storageManager;
+  private ReplicateManager replicateManager;
+
 
   public HeartbeatManager(NameNodeRpcClient namenodeRpcClient,
-      StorageManager storageManager) {
+      StorageManager storageManager, ReplicateManager replicateManager) {
     this.namenodeRpcClient = namenodeRpcClient;
     this.storageManager = storageManager;
+    this.replicateManager = replicateManager;
   }
 
   public void start() {
@@ -43,19 +52,45 @@ public class HeartbeatManager {
           HeartbeatResponse response = namenodeRpcClient.heartbeat();
 
           // 如果心跳失败了
-          if (response.getStatus() == 2) {
+          if(SUCCESS.equals(response.getStatus())) {
             JSONArray commands = JSONArray.parseArray(response.getCommands());
 
-            for (int i = 0; i < commands.size(); i++) {
+            if(commands.size() > 0) {
+              for(int i = 0; i < commands.size(); i++) {
+                JSONObject command = commands.getJSONObject(i);
+                Integer type = command.getInteger("type");
+                JSONObject task = command.getJSONObject("content");
+
+                if(type.equals(COMMAND_REPLICATE)) {
+                  replicateManager.addReplicateTask(task);
+                  System.out.println("接收副本复制任务，" + command);
+                } else if(type.equals(COMMAND_REMOVE_REPLICA)) {
+                  // 删除副本
+                  String filename = task.getString("filename");
+                  String absoluteFilename = FileUtils.getAbsoluteFilename(filename);
+                  File file = new File(absoluteFilename);
+                  if(file.exists()) {
+                    file.delete();
+                  }
+                }
+              }
+            }
+          }
+
+          // 如果心跳失败了
+          if(FAILURE.equals(response.getStatus())) {
+            JSONArray commands = JSONArray.parseArray(response.getCommands());
+
+            for(int i = 0; i < commands.size(); i++) {
               JSONObject command = commands.getJSONObject(i);
               Integer type = command.getInteger("type");
 
               // 如果是注册的命令
-              if (type.equals(HeartbeatManager.REGISTER)) {
+              if(type.equals(COMMAND_REGISTER)) {
                 namenodeRpcClient.register();
               }
               // 如果是全量上报的命令
-              else if (type.equals(HeartbeatManager.REPORT_COMPLETE_STORAGE_INFO)) {
+              else if(type.equals(COMMAND_REPORT_COMPLETE_STORAGE_INFO)) {
                 StorageInfo storageInfo = storageManager.getStorageInfo();
                 namenodeRpcClient.reportCompleteStorageInfo(storageInfo);
               }

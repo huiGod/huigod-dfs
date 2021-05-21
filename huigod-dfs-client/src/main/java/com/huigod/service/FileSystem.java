@@ -28,4 +28,12 @@ public interface FileSystem {
    * @throws Exception
    */
   Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
+
+  /**
+   * 下载文件
+   * @param filename 文件名
+   * @return 文件的字节数组
+   * @throws Exception
+   */
+  byte[] download(String filename) throws Exception;
 }

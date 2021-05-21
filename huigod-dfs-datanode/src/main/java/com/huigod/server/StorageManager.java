@@ -42,7 +42,7 @@ public class StorageManager {
       // /image/product/iphone.jpg
       path = path.replace("\\", "/");
 
-      storageInfo.addFilename(path);
+      storageInfo.addFilename(path + "_" + dir.length());
       storageInfo.addStoredDataSize(dir.length());
 
       return;

@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\027com.huigod.na" +
-      "menode.rpc\032\026NameNodeRpcModel.proto2\202\t\n\017N" +
+      "menode.rpc\032\026NameNodeRpcModel.proto2\201\n\n\017N" +
       "ameNodeService\022_\n\010register\022(.com.huigod." +
       "namenode.rpc.RegisterRequest\032).com.huigo" +
       "d.namenode.rpc.RegisterResponse\022b\n\theart" +
@@ -53,9 +53,12 @@ public final class NameNodeServer {
       "geInfoResponse\022\206\001\n\025informReplicaReceived" +
       "\0225.com.huigod.namenode.rpc.InformReplica" +
       "ReceivedRequest\0326.com.huigod.namenode.rp" +
-      "c.InformReplicaReceivedResponseB3\n\037com.h" +
-      "uigod.namenode.rpc.serviceB\016NameNodeServ" +
-      "erP\001b\006proto3"
+      "c.InformReplicaReceivedResponse\022}\n\022getDa" +
+      "taNodeForFile\0222.com.huigod.namenode.rpc." +
+      "GetDataNodeForFileRequest\0323.com.huigod.n" +
+      "amenode.rpc.GetDataNodeForFileResponseB3" +
+      "\n\037com.huigod.namenode.rpc.serviceB\016NameN" +
+      "odeServerP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

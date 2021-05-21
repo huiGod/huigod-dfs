@@ -1,6 +1,7 @@
 package com.huigod.manager;
 
 import com.huigod.entity.DataNodeInfo;
+import com.huigod.entity.ReplicateTask;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -20,6 +21,12 @@ public class DataNodeManager {
    * 集群所有datanode节点
    */
   private Map<String, DataNodeInfo> dataNodes = new ConcurrentHashMap<>();
+
+  private FSNameSystem nameSystem;
+
+  public void setNameSystem(FSNameSystem nameSystem) {
+    this.nameSystem = nameSystem;
+  }
 
   /**
    * 启动心跳检测线程
@@ -67,6 +74,17 @@ public class DataNodeManager {
   }
 
   /**
+   * 获取DataNode信息
+   *
+   * @param ip
+   * @param hostname
+   * @return
+   */
+  public DataNodeInfo getDatanode(String ip, String hostname) {
+    return dataNodes.get(ip + "-" + hostname);
+  }
+
+  /**
    * dataNode是否存活的监控线程
    */
   class DataNodeAliveMonitor extends Thread {
@@ -75,7 +93,7 @@ public class DataNodeManager {
     public void run() {
       try {
         while (true) {
-          List<String> toRemoveDataNodes = new ArrayList<>();
+          List<DataNodeInfo> toRemoveDataNodes = new ArrayList<>();
 
           if (!MapUtils.isEmpty(dataNodes)) {
             Iterator<DataNodeInfo> dataNodesIterator = dataNodes.values().iterator();
@@ -84,13 +102,18 @@ public class DataNodeManager {
               datanode = dataNodesIterator.next();
               //超过90S没有更新心跳，判定为宕机并移除
               if (System.currentTimeMillis() - datanode.getLatestHeartbeatTime() > 90 * 1000) {
-                toRemoveDataNodes.add(datanode.getIp() + "-" + datanode.getHostname());
+                toRemoveDataNodes.add(datanode);
               }
             }
 
             if (!toRemoveDataNodes.isEmpty()) {
-              for (String toRemoveDatanode : toRemoveDataNodes) {
-                dataNodes.remove(toRemoveDatanode);
+              for (DataNodeInfo toRemoveDatanode : toRemoveDataNodes) {
+                log.info("数据节点【" + toRemoveDatanode + "】宕机，需要 进行副本复制......");
+                //创建副本复制任务
+                createLostReplicaTask(toRemoveDatanode);
+                dataNodes.remove(toRemoveDatanode.getId());
+                // 删除掉这个数据结构
+                nameSystem.removeDeadDatanode(toRemoveDatanode);
               }
             }
           }
@@ -131,6 +154,73 @@ public class DataNodeManager {
       }
 
       return selectedDataNodes;
+    }
+  }
+
+  /**
+   * 设置一个DataNode的存储数据的大小
+   *
+   * @param ip
+   * @param hostname
+   * @param storedDataSize
+   */
+  public void setStoredDataSize(String ip, String hostname, Long storedDataSize) {
+    DataNodeInfo datanode = dataNodes.get(ip + "-" + hostname);
+    datanode.setStoredDataSize(storedDataSize);
+  }
+
+  /**
+   * 创建丢失副本的复制任务
+   */
+  private void createLostReplicaTask(DataNodeInfo deadDatanode) {
+    List<String> files = nameSystem.getFilesByDatanode(
+        deadDatanode.getIp(), deadDatanode.getHostname());
+
+    for (String file : files) {
+      String filename = file.split("_")[0];
+      Long fileLength = Long.valueOf(file.split("_")[1]);
+      // 获取这个复制任务的源头数据节点
+      DataNodeInfo sourceDatanode = nameSystem.getReplicateSource(filename, deadDatanode);
+      // 复制任务的目标数据节点，第一，不能是已经死掉的节点 ；第二，不能是已经有这个副本的节点
+      DataNodeInfo destDatanode = allocateReplicateDataNode(fileLength, sourceDatanode,
+          deadDatanode);
+
+      ReplicateTask replicateTask = new ReplicateTask(
+          filename, fileLength, sourceDatanode, destDatanode);
+
+      // 将复制任务放到目标数据节点的任务队列里去
+      destDatanode.addReplicateTask(replicateTask);
+      log.info("为目标数据节点生成一个副本复制任务，" + replicateTask);
+    }
+  }
+
+  /**
+   * 分配用来复制副本的数据节点
+   *
+   * @param fileSize
+   * @param sourceDatanode
+   * @param deadDatanode
+   * @return
+   */
+  private DataNodeInfo allocateReplicateDataNode(Long fileSize, DataNodeInfo sourceDatanode,
+      DataNodeInfo deadDatanode) {
+    synchronized (this) {
+      List<DataNodeInfo> datanodeList = new ArrayList<>();
+      for (DataNodeInfo datanode : dataNodes.values()) {
+        if (!datanode.equals(sourceDatanode) &&
+            !datanode.equals(deadDatanode)) {
+          datanodeList.add(datanode);
+        }
+      }
+      Collections.sort(datanodeList);
+
+      DataNodeInfo selectedDatanode = null;
+      if (!datanodeList.isEmpty()) {
+        selectedDatanode = datanodeList.get(0);
+        datanodeList.get(0).addStoredDataSize(fileSize);
+      }
+
+      return selectedDatanode;
     }
   }
 }

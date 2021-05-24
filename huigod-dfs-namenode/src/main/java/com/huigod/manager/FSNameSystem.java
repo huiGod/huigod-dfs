@@ -500,4 +500,57 @@ public class FSNameSystem {
 
     return replicateSource;
   }
+
+  /**
+   * 获取文件的某个副本所在的机器
+   *
+   * @param filename
+   * @param excludedDataNodeId
+   * @return
+   */
+  public DataNodeInfo chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) {
+    try {
+      replicasLock.readLock().lock();
+
+      DataNodeInfo excludedDataNode = datanodeManager.getDatanode(excludedDataNodeId);
+
+      List<DataNodeInfo> datanodes = replicasByFilename.get(filename);
+      if (datanodes.size() == 1) {
+        if (datanodes.get(0).equals(excludedDataNode)) {
+          return null;
+        }
+      }
+
+      int size = datanodes.size();
+      Random random = new Random();
+
+      while (true) {
+        int index = random.nextInt(size);
+        DataNodeInfo datanode = datanodes.get(index);
+        if (!datanode.equals(excludedDataNode)) {
+          return datanode;
+        }
+      }
+    } finally {
+      replicasLock.readLock().lock();
+    }
+  }
+
+  /**
+   * 从数据节点删除掉一个文件副本
+   *
+   * @param id
+   * @param file
+   */
+  public void removeReplicaFromDataNode(String id, String file) {
+    try {
+      replicasLock.writeLock().lock();
+
+      filesByDatanode.get(id).remove(file);
+
+      replicasByFilename.get(file.split("_")[0]).removeIf(replica -> replica.getId().equals(id));
+    } finally {
+      replicasLock.writeLock().unlock();
+    }
+  }
 }

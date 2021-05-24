@@ -5,12 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.huigod.client.NIOClient;
 import com.huigod.namenode.rpc.model.AllocateDataNodesRequest;
 import com.huigod.namenode.rpc.model.AllocateDataNodesResponse;
+import com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest;
+import com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse;
 import com.huigod.namenode.rpc.model.CreateFileRequest;
 import com.huigod.namenode.rpc.model.CreateFileResponse;
 import com.huigod.namenode.rpc.model.GetDataNodeForFileRequest;
 import com.huigod.namenode.rpc.model.GetDataNodeForFileResponse;
 import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
+import com.huigod.namenode.rpc.model.ReallocateDataNodeRequest;
+import com.huigod.namenode.rpc.model.ReallocateDataNodeResponse;
 import com.huigod.namenode.rpc.model.ShutdownRequest;
 import com.huigod.namenode.rpc.model.ShutdownResponse;
 import com.huigod.namenode.rpc.service.NameNodeServiceGrpc;
@@ -89,10 +93,9 @@ public class FileSystemImpl implements FileSystem {
 
     log.info("在文件目录树中成功创建该文件......");
 
-
     //调用NameUpNode来获取负载均衡后的DataNode节点
     String dataNodesJson = this.allocateDataNodes(fileName, fileSize);
-    log.info("upload file allocate DataNodes:{}", dataNodesJson);
+    log.info("申请分配了2个数据节点：{}", dataNodesJson);
 
     //依次将文件上传到dataNode上，需要考虑容错机制
     JSONArray dataNodes = JSONArray.parseArray(dataNodesJson);
@@ -100,7 +103,18 @@ public class FileSystemImpl implements FileSystem {
       JSONObject datanode = dataNodes.getJSONObject(i);
       String hostname = datanode.getString("hostname");
       int nioPort = datanode.getIntValue("nioPort");
-      NIOClient.sendFile(hostname, nioPort, file, fileName, fileSize);
+      String ip = datanode.getString("ip");
+
+      if (!nioClient.sendFile(hostname, nioPort, file, fileName, fileSize)) {
+        datanode = JSONObject.parseObject(
+            reallocateDataNode(fileName, fileSize, ip + "-" + hostname));
+        hostname = datanode.getString("hostname");
+        nioPort = datanode.getIntValue("nioPort");
+        //如果重试其他节点仍然上传失败则抛错
+        if (!nioClient.sendFile(hostname, nioPort, file, fileName, fileSize)) {
+          throw new Exception("file upload failed......");
+        }
+      }
     }
 
     return true;
@@ -147,17 +161,30 @@ public class FileSystemImpl implements FileSystem {
    */
   @Override
   public byte[] download(String filename) throws Exception {
-    // 1.调用NameNode获取文件副本所在的DataNode
+    // 调用NameNode获取文件副本所在的DataNode
     JSONObject datanode = getDataNodeForFile(filename);
     log.info("Master分配用来下载文件的数据节点：" + datanode.toJSONString());
 
-    // 2.打开一个针对那个DataNode的网络连接，发送文件名过去
-    // 3.尝试从连接中读取对方传输过来的文件
-    // 4.读取到文件之后不需要写入本地的磁盘中，而是转换为一个字节数组返回即可
-
     String hostname = datanode.getString("hostname");
+    String ip = datanode.getString("ip");
     Integer nioPort = datanode.getInteger("nioPort");
-    return nioClient.readFile(hostname, nioPort, filename);
+
+    byte[] file = null;
+
+    try {
+      file = nioClient.readFile(hostname, nioPort, filename);
+    } catch (Exception e) {
+      datanode = chooseDataNodeFromReplicas(filename, ip + "-" + hostname);
+      hostname = datanode.getString("hostname");
+      nioPort = datanode.getInteger("nioPort");
+
+      try {
+        file = nioClient.readFile(hostname, nioPort, filename);
+      } catch (Exception e2) {
+        throw e2;
+      }
+    }
+    return file;
   }
 
   /**
@@ -172,5 +199,37 @@ public class FileSystemImpl implements FileSystem {
         .build();
     GetDataNodeForFileResponse response = nameNode.getDataNodeForFile(request);
     return JSONObject.parseObject(response.getDatanodeInfo());
+  }
+
+  /**
+   * 重新分配一个数据节点
+   *
+   * @param filename
+   * @param fileSize
+   * @return
+   */
+  private String reallocateDataNode(String filename, long fileSize, String excludedDataNodeId) {
+    ReallocateDataNodeRequest request = ReallocateDataNodeRequest.newBuilder()
+        .setFileSize(fileSize)
+        .setExcludedDataNodeId(excludedDataNodeId)
+        .build();
+    ReallocateDataNodeResponse response = nameNode.reallocateDataNode(request);
+    return response.getDatanode();
+  }
+
+  /**
+   * 获取文件的某个副本所在的机器
+   *
+   * @param filename
+   * @param excludedDataNodeId
+   * @return
+   */
+  private JSONObject chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) {
+    ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest.newBuilder()
+        .setFilename(filename)
+        .setExcludedDataNodeId(excludedDataNodeId)
+        .build();
+    ChooseDataNodeFromReplicasResponse response = nameNode.chooseDataNodeFromReplicas(request);
+    return JSONObject.parseObject(response.getDatanode());
   }
 }

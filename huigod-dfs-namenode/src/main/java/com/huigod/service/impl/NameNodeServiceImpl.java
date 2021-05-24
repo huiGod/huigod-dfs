@@ -10,6 +10,8 @@ import com.huigod.manager.DataNodeManager;
 import com.huigod.manager.FSNameSystem;
 import com.huigod.namenode.rpc.model.AllocateDataNodesRequest;
 import com.huigod.namenode.rpc.model.AllocateDataNodesResponse;
+import com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest;
+import com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse;
 import com.huigod.namenode.rpc.model.CreateFileRequest;
 import com.huigod.namenode.rpc.model.CreateFileResponse;
 import com.huigod.namenode.rpc.model.FetchEditsLogRequest;
@@ -22,6 +24,10 @@ import com.huigod.namenode.rpc.model.InformReplicaReceivedRequest;
 import com.huigod.namenode.rpc.model.InformReplicaReceivedResponse;
 import com.huigod.namenode.rpc.model.MkdirRequest;
 import com.huigod.namenode.rpc.model.MkdirResponse;
+import com.huigod.namenode.rpc.model.ReallocateDataNodeRequest;
+import com.huigod.namenode.rpc.model.ReallocateDataNodeResponse;
+import com.huigod.namenode.rpc.model.RebalanceRequest;
+import com.huigod.namenode.rpc.model.RebalanceResponse;
 import com.huigod.namenode.rpc.model.RegisterRequest;
 import com.huigod.namenode.rpc.model.RegisterResponse;
 import com.huigod.namenode.rpc.model.ReportCompleteStorageInfoRequest;
@@ -573,6 +579,61 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
     GetDataNodeForFileResponse response = GetDataNodeForFileResponse.newBuilder()
         .setDatanodeInfo(JSONObject.toJSONString(datanode))
+        .build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 重新分配一个数据节点
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void reallocateDataNode(ReallocateDataNodeRequest request,
+      StreamObserver<ReallocateDataNodeResponse> responseObserver) {
+    long fileSize = request.getFileSize();
+    String excludedDataNodeId = request.getExcludedDataNodeId();
+    DataNodeInfo datanode = datanodeManager.reallocateDataNode(fileSize, excludedDataNodeId);
+
+    ReallocateDataNodeResponse response = ReallocateDataNodeResponse.newBuilder()
+        .setDatanode(JSONObject.toJSONString(datanode))
+        .build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 获取文件的某个副本所在的DataNode
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void chooseDataNodeFromReplicas(ChooseDataNodeFromReplicasRequest request,
+      StreamObserver<ChooseDataNodeFromReplicasResponse> responseObserver) {
+    String filename = request.getFilename();
+    String excludedDataNodeId = request.getExcludedDataNodeId();
+    DataNodeInfo datanode = nameSystem.chooseDataNodeFromReplicas(filename, excludedDataNodeId);
+
+    ChooseDataNodeFromReplicasResponse response = ChooseDataNodeFromReplicasResponse.newBuilder()
+        .setDatanode(JSONObject.toJSONString(datanode))
+        .build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  /**
+   * 集群重平衡
+   * @param request
+   * @param responseObserver
+   */
+  @Override
+  public void rebalance(RebalanceRequest request,
+      StreamObserver<RebalanceResponse> responseObserver) {
+    datanodeManager.createRebalancedTasks();
+
+    RebalanceResponse response = RebalanceResponse.newBuilder()
+        .setStatus(STATUS_SUCCESS)
         .build();
     responseObserver.onNext(response);
     responseObserver.onCompleted();

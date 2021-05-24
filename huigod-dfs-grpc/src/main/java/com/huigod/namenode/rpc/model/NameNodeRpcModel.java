@@ -124,6 +124,36 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_RebalanceRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_RebalanceRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_huigod_namenode_rpc_RebalanceResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_huigod_namenode_rpc_RebalanceResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -152,19 +182,27 @@ public final class NameNodeRpcModel {
       "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005\">\n\030" +
       "AllocateDataNodesRequest\022\020\n\010fileName\030\001 \001" +
       "(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031AllocateDataNode" +
-      "sResponse\022\021\n\tdataNodes\030\001 \001(\t\"\177\n ReportCo" +
+      "sResponse\022\021\n\tdataNodes\030\001 \001(\t\"k\n ReportCo" +
       "mpleteStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010" +
       "hostName\030\002 \001(\t\022\021\n\tfilenames\030\003 \001(\t\022\026\n\016Sto" +
-      "redDataSize\030\004 \001(\003\022\022\n\nfileLength\030\005 \001(\003\"3\n" +
-      "!ReportCompleteStorageInfoResponse\022\016\n\006st" +
-      "atus\030\001 \001(\005\"b\n\034InformReplicaReceivedReque" +
-      "st\022\020\n\010hostname\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\022\020\n\010file" +
-      "Name\030\003 \001(\t\022\022\n\nfileLength\030\004 \001(\003\"/\n\035Inform" +
+      "redDataSize\030\004 \001(\003\"3\n!ReportCompleteStora" +
+      "geInfoResponse\022\016\n\006status\030\001 \001(\005\"N\n\034Inform" +
+      "ReplicaReceivedRequest\022\020\n\010hostname\030\001 \001(\t" +
+      "\022\n\n\002ip\030\002 \001(\t\022\020\n\010fileName\030\003 \001(\t\"/\n\035Inform" +
       "ReplicaReceivedResponse\022\016\n\006status\030\001 \001(\005\"" +
       "-\n\031GetDataNodeForFileRequest\022\020\n\010fileName" +
       "\030\001 \001(\t\"2\n\032GetDataNodeForFileResponse\022\024\n\014" +
-      "datanodeInfo\030\001 \001(\tB3\n\035com.huigod.namenod" +
-      "e.rpc.modelB\020NameNodeRpcModelP\001b\006proto3"
+      "datanodeInfo\030\001 \001(\t\"I\n\031ReallocateDataNode" +
+      "Request\022\020\n\010fileSize\030\001 \001(\003\022\032\n\022excludedDat" +
+      "aNodeId\030\002 \001(\t\".\n\032ReallocateDataNodeRespo" +
+      "nse\022\020\n\010datanode\030\001 \001(\t\"Q\n!ChooseDataNodeF" +
+      "romReplicasRequest\022\020\n\010filename\030\001 \001(\t\022\032\n\022" +
+      "excludedDataNodeId\030\002 \001(\t\"6\n\"ChooseDataNo" +
+      "deFromReplicasResponse\022\020\n\010datanode\030\001 \001(\t" +
+      "\"\"\n\020RebalanceRequest\022\016\n\006status\030\001 \001(\005\"#\n\021" +
+      "RebalanceResponse\022\016\n\006status\030\001 \001(\005B3\n\035com" +
+      ".huigod.namenode.rpc.modelB\020NameNodeRpcM" +
+      "odelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -271,7 +309,7 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoRequest_descriptor,
-        new String[] { "Ip", "HostName", "Filenames", "StoredDataSize", "FileLength", });
+        new String[] { "Ip", "HostName", "Filenames", "StoredDataSize", });
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(17);
     internal_static_com_huigod_namenode_rpc_ReportCompleteStorageInfoResponse_fieldAccessorTable = new
@@ -283,7 +321,7 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_InformReplicaReceivedRequest_descriptor,
-        new String[] { "Hostname", "Ip", "FileName", "FileLength", });
+        new String[] { "Hostname", "Ip", "FileName", });
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_descriptor =
       getDescriptor().getMessageTypes().get(19);
     internal_static_com_huigod_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable = new
@@ -302,6 +340,42 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_GetDataNodeForFileResponse_descriptor,
         new String[] { "DatanodeInfo", });
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_descriptor,
+        new String[] { "FileSize", "ExcludedDataNodeId", });
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_descriptor =
+      getDescriptor().getMessageTypes().get(23);
+    internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_descriptor,
+        new String[] { "Datanode", });
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor,
+        new String[] { "Filename", "ExcludedDataNodeId", });
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor,
+        new String[] { "Datanode", });
+    internal_static_com_huigod_namenode_rpc_RebalanceRequest_descriptor =
+      getDescriptor().getMessageTypes().get(26);
+    internal_static_com_huigod_namenode_rpc_RebalanceRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_RebalanceRequest_descriptor,
+        new String[] { "Status", });
+    internal_static_com_huigod_namenode_rpc_RebalanceResponse_descriptor =
+      getDescriptor().getMessageTypes().get(27);
+    internal_static_com_huigod_namenode_rpc_RebalanceResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_huigod_namenode_rpc_RebalanceResponse_descriptor,
+        new String[] { "Status", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

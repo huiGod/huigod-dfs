@@ -1,6 +1,7 @@
 package com.huigod.manager;
 
 import com.huigod.entity.DataNodeInfo;
+import com.huigod.entity.RemoveReplicaTask;
 import com.huigod.entity.ReplicateTask;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,43 +86,44 @@ public class DataNodeManager {
   }
 
   /**
-   * dataNode是否存活的监控线程
+   * 获取DataNode信息
+   *
+   * @return
    */
-  class DataNodeAliveMonitor extends Thread {
+  public DataNodeInfo getDatanode(String id) {
+    return dataNodes.get(id);
+  }
 
-    @Override
-    public void run() {
-      try {
-        while (true) {
-          List<DataNodeInfo> toRemoveDataNodes = new ArrayList<>();
+  /**
+   * 分配双副本对应的数据节点
+   *
+   * @param fileSize
+   * @param excludedDataNodeId
+   * @return
+   */
+  public DataNodeInfo reallocateDataNode(long fileSize, String excludedDataNodeId) {
+    synchronized (this) {
+      // 先得把排除掉的那个数据节点的存储的数据量减少文件的大小
+      DataNodeInfo excludedDataNode = dataNodes.get(excludedDataNodeId);
+      excludedDataNode.addStoredDataSize(-fileSize);
 
-          if (!MapUtils.isEmpty(dataNodes)) {
-            Iterator<DataNodeInfo> dataNodesIterator = dataNodes.values().iterator();
-            DataNodeInfo datanode;
-            while (dataNodesIterator.hasNext()) {
-              datanode = dataNodesIterator.next();
-              //超过90S没有更新心跳，判定为宕机并移除
-              if (System.currentTimeMillis() - datanode.getLatestHeartbeatTime() > 90 * 1000) {
-                toRemoveDataNodes.add(datanode);
-              }
-            }
-
-            if (!toRemoveDataNodes.isEmpty()) {
-              for (DataNodeInfo toRemoveDatanode : toRemoveDataNodes) {
-                log.info("数据节点【" + toRemoveDatanode + "】宕机，需要 进行副本复制......");
-                //创建副本复制任务
-                createLostReplicaTask(toRemoveDatanode);
-                dataNodes.remove(toRemoveDatanode.getId());
-                // 删除掉这个数据结构
-                nameSystem.removeDeadDatanode(toRemoveDatanode);
-              }
-            }
-          }
-          Thread.sleep(30 * 1000);
+      // 取出来所有的datanode，并且按照已经存储的数据大小来排序
+      List<DataNodeInfo> datanodeList = new ArrayList<>();
+      for (DataNodeInfo datanode : dataNodes.values()) {
+        if (!excludedDataNode.equals(datanode)) {
+          datanodeList.add(datanode);
         }
-      } catch (Exception e) {
-        log.error("DataNodeAliveMonitor is error:", e);
       }
+      Collections.sort(datanodeList);
+
+      // 选择存储数据最少的datanode出来
+      DataNodeInfo selectedDatanode = null;
+      if (datanodeList.size() >= 1) {
+        selectedDatanode = datanodeList.get(0);
+        datanodeList.get(0).addStoredDataSize(fileSize);
+      }
+
+      return selectedDatanode;
     }
   }
 
@@ -221,6 +223,170 @@ public class DataNodeManager {
       }
 
       return selectedDatanode;
+    }
+  }
+
+  /**
+   * 为重平衡去创建副本复制的任务
+   */
+  public void createRebalancedTasks() {
+    synchronized (this) {
+      // 计算集群节点存储数据的平均值
+      long totalStoredDataSize = 0;
+      for (DataNodeInfo datanode : dataNodes.values()) {
+        totalStoredDataSize += datanode.getStoredDataSize();
+      }
+      long averageStoredDataSize = totalStoredDataSize / dataNodes.size();
+
+      // 将集群中的节点区分为两类：迁出节点和迁入节点
+      List<DataNodeInfo> sourceDataNodes = new ArrayList<>();
+      List<DataNodeInfo> destDataNodes = new ArrayList<>();
+
+      for (DataNodeInfo datanode : dataNodes.values()) {
+        if (datanode.getStoredDataSize() > averageStoredDataSize) {
+          sourceDataNodes.add(datanode);
+        }
+        if (datanode.getStoredDataSize() < averageStoredDataSize) {
+          destDataNodes.add(datanode);
+        }
+      }
+
+      // 为迁入节点生成复制的任务，为迁出节点生成删除的任务
+      // 删除任务通过延迟调度执行线程来处理
+      List<RemoveReplicaTask> removeReplicaTasks = new ArrayList<>();
+
+      for (DataNodeInfo sourceDataNode : sourceDataNodes) {
+        long toRemoveDataSize = sourceDataNode.getStoredDataSize() - averageStoredDataSize;
+
+        for (DataNodeInfo destDatanode : destDataNodes) {
+          // 直接一次性放到一台机器就可以了
+          if (destDatanode.getStoredDataSize() + toRemoveDataSize <= averageStoredDataSize) {
+            createRebalanceTasks(sourceDataNode, destDatanode,
+                removeReplicaTasks, toRemoveDataSize);
+            break;
+          }// 只能把部分数据放到这台机器上去
+          else if (destDatanode.getStoredDataSize() < averageStoredDataSize) {
+            long maxRemoveDataSize = averageStoredDataSize - destDatanode.getStoredDataSize();
+            long removedDataSize = createRebalanceTasks(sourceDataNode, destDatanode,
+                removeReplicaTasks, maxRemoveDataSize);
+            toRemoveDataSize -= removedDataSize;
+          }
+        }
+      }
+      // 交给一个延迟线程去24小时之后执行删除副本的任务
+      new DelayRemoveReplicaThread(removeReplicaTasks).start();
+    }
+  }
+
+  private long createRebalanceTasks(DataNodeInfo sourceDataNode, DataNodeInfo destDatanode,
+      List<RemoveReplicaTask> removeReplicaTasks, long maxRemoveDataSize) {
+
+    //查询当前节点所有文件数据
+    List<String> files = nameSystem.getFilesByDatanode(sourceDataNode.getIp(),
+        sourceDataNode.getHostname());
+
+    // 遍历文件，不停的为每个文件生成一个复制的任务，直到准备迁移的文件的大小
+    // 超过了待迁移总数据量的大小为止
+    long removedDataSize = 0;
+    for (String file : files) {
+      String filename = file.split("_")[0];
+      long fileLength = Long.parseLong(file.split("_")[1]);
+
+      if (removedDataSize + fileLength >= maxRemoveDataSize) {
+        break;
+      }
+
+      // 为这个文件生成复制任务
+      ReplicateTask replicateTask = new ReplicateTask(
+          filename, fileLength, sourceDataNode, destDatanode);
+      destDatanode.addReplicateTask(replicateTask);
+      destDatanode.addStoredDataSize(fileLength);
+
+      // 为这个文件生成删除任务
+      sourceDataNode.addStoredDataSize(-fileLength);
+      nameSystem.removeReplicaFromDataNode(sourceDataNode.getId(), file);
+      RemoveReplicaTask removeReplicaTask = new RemoveReplicaTask(
+          filename, sourceDataNode);
+      removeReplicaTasks.add(removeReplicaTask);
+
+      removedDataSize += fileLength;
+
+    }
+    return removedDataSize;
+  }
+
+  /**
+   * dataNode是否存活的监控线程
+   */
+  class DataNodeAliveMonitor extends Thread {
+
+    @Override
+    public void run() {
+      try {
+        while (true) {
+          List<DataNodeInfo> toRemoveDataNodes = new ArrayList<>();
+
+          if (!MapUtils.isEmpty(dataNodes)) {
+            Iterator<DataNodeInfo> dataNodesIterator = dataNodes.values().iterator();
+            DataNodeInfo datanode;
+            while (dataNodesIterator.hasNext()) {
+              datanode = dataNodesIterator.next();
+              //超过90S没有更新心跳，判定为宕机并移除
+              if (System.currentTimeMillis() - datanode.getLatestHeartbeatTime() > 90 * 1000) {
+                toRemoveDataNodes.add(datanode);
+              }
+            }
+
+            if (!toRemoveDataNodes.isEmpty()) {
+              for (DataNodeInfo toRemoveDatanode : toRemoveDataNodes) {
+                log.info("数据节点【" + toRemoveDatanode + "】宕机，需要 进行副本复制......");
+                //创建副本复制任务
+                createLostReplicaTask(toRemoveDatanode);
+                dataNodes.remove(toRemoveDatanode.getId());
+                // 删除掉这个数据结构
+                nameSystem.removeDeadDatanode(toRemoveDatanode);
+              }
+            }
+          }
+          Thread.sleep(30 * 1000);
+        }
+      } catch (Exception e) {
+        log.error("DataNodeAliveMonitor is error:", e);
+      }
+    }
+  }
+
+  /**
+   * 延迟删除副本的线程
+   */
+  class DelayRemoveReplicaThread extends Thread {
+
+    private List<RemoveReplicaTask> removeReplicaTasks;
+
+    public DelayRemoveReplicaThread(List<RemoveReplicaTask> removeReplicaTasks) {
+      this.removeReplicaTasks = removeReplicaTasks;
+    }
+
+    @Override
+    public void run() {
+      long start = System.currentTimeMillis();
+
+      while (true) {
+        try {
+          long now = System.currentTimeMillis();
+
+          if (now - start > 24 * 60 * 60 * 1000) {
+            for (RemoveReplicaTask removeReplicaTask : removeReplicaTasks) {
+              removeReplicaTask.getDatanode().addRemoveReplicaTask(removeReplicaTask);
+            }
+            break;
+          }
+
+          Thread.sleep(60 * 1000);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 }

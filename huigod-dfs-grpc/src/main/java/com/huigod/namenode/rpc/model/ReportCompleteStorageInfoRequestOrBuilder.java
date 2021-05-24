@@ -48,10 +48,4 @@ public interface ReportCompleteStorageInfoRequestOrBuilder extends
    * @return The storedDataSize.
    */
   long getStoredDataSize();
-
-  /**
-   * <code>int64 fileLength = 5;</code>
-   * @return The fileLength.
-   */
-  long getFileLength();
 }

@@ -69,11 +69,6 @@ private static final long serialVersionUID = 0L;
             fileName_ = s;
             break;
           }
-          case 32: {
-
-            fileLength_ = input.readInt64();
-            break;
-          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -214,16 +209,6 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int FILELENGTH_FIELD_NUMBER = 4;
-  private long fileLength_;
-  /**
-   * <code>int64 fileLength = 4;</code>
-   * @return The fileLength.
-   */
-  public long getFileLength() {
-    return fileLength_;
-  }
-
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -247,9 +232,6 @@ private static final long serialVersionUID = 0L;
     if (!getFileNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, fileName_);
     }
-    if (fileLength_ != 0L) {
-      output.writeInt64(4, fileLength_);
-    }
     unknownFields.writeTo(output);
   }
 
@@ -267,10 +249,6 @@ private static final long serialVersionUID = 0L;
     }
     if (!getFileNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, fileName_);
-    }
-    if (fileLength_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, fileLength_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -293,8 +271,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getIp())) return false;
     if (!getFileName()
         .equals(other.getFileName())) return false;
-    if (getFileLength()
-        != other.getFileLength()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -312,9 +288,6 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + FILENAME_FIELD_NUMBER;
     hash = (53 * hash) + getFileName().hashCode();
-    hash = (37 * hash) + FILELENGTH_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getFileLength());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -454,8 +427,6 @@ private static final long serialVersionUID = 0L;
 
       fileName_ = "";
 
-      fileLength_ = 0L;
-
       return this;
     }
 
@@ -485,7 +456,6 @@ private static final long serialVersionUID = 0L;
       result.hostname_ = hostname_;
       result.ip_ = ip_;
       result.fileName_ = fileName_;
-      result.fileLength_ = fileLength_;
       onBuilt();
       return result;
     }
@@ -545,9 +515,6 @@ private static final long serialVersionUID = 0L;
       if (!other.getFileName().isEmpty()) {
         fileName_ = other.fileName_;
         onChanged();
-      }
-      if (other.getFileLength() != 0L) {
-        setFileLength(other.getFileLength());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -802,36 +769,6 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       fileName_ = value;
-      onChanged();
-      return this;
-    }
-
-    private long fileLength_ ;
-    /**
-     * <code>int64 fileLength = 4;</code>
-     * @return The fileLength.
-     */
-    public long getFileLength() {
-      return fileLength_;
-    }
-    /**
-     * <code>int64 fileLength = 4;</code>
-     * @param value The fileLength to set.
-     * @return This builder for chaining.
-     */
-    public Builder setFileLength(long value) {
-      
-      fileLength_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 fileLength = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearFileLength() {
-      
-      fileLength_ = 0L;
       onChanged();
       return this;
     }

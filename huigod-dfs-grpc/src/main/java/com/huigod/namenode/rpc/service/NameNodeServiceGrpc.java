@@ -371,6 +371,102 @@ public final class NameNodeServiceGrpc {
      return getGetDataNodeForFileMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ReallocateDataNodeRequest,
+      com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "reallocateDataNode",
+      requestType = com.huigod.namenode.rpc.model.ReallocateDataNodeRequest.class,
+      responseType = com.huigod.namenode.rpc.model.ReallocateDataNodeResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ReallocateDataNodeRequest,
+      com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ReallocateDataNodeRequest, com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod;
+    if ((getReallocateDataNodeMethod = NameNodeServiceGrpc.getReallocateDataNodeMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getReallocateDataNodeMethod = NameNodeServiceGrpc.getReallocateDataNodeMethod) == null) {
+          NameNodeServiceGrpc.getReallocateDataNodeMethod = getReallocateDataNodeMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.ReallocateDataNodeRequest, com.huigod.namenode.rpc.model.ReallocateDataNodeResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "reallocateDataNode"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ReallocateDataNodeRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ReallocateDataNodeResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("reallocateDataNode"))
+                  .build();
+          }
+        }
+     }
+     return getReallocateDataNodeMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+      com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "chooseDataNodeFromReplicas",
+      requestType = com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest.class,
+      responseType = com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+      com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest, com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod;
+    if ((getChooseDataNodeFromReplicasMethod = NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getChooseDataNodeFromReplicasMethod = NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod) == null) {
+          NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod = getChooseDataNodeFromReplicasMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest, com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "chooseDataNodeFromReplicas"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("chooseDataNodeFromReplicas"))
+                  .build();
+          }
+        }
+     }
+     return getChooseDataNodeFromReplicasMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.RebalanceRequest,
+      com.huigod.namenode.rpc.model.RebalanceResponse> getRebalanceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "rebalance",
+      requestType = com.huigod.namenode.rpc.model.RebalanceRequest.class,
+      responseType = com.huigod.namenode.rpc.model.RebalanceResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.RebalanceRequest,
+      com.huigod.namenode.rpc.model.RebalanceResponse> getRebalanceMethod() {
+    io.grpc.MethodDescriptor<com.huigod.namenode.rpc.model.RebalanceRequest, com.huigod.namenode.rpc.model.RebalanceResponse> getRebalanceMethod;
+    if ((getRebalanceMethod = NameNodeServiceGrpc.getRebalanceMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getRebalanceMethod = NameNodeServiceGrpc.getRebalanceMethod) == null) {
+          NameNodeServiceGrpc.getRebalanceMethod = getRebalanceMethod = 
+              io.grpc.MethodDescriptor.<com.huigod.namenode.rpc.model.RebalanceRequest, com.huigod.namenode.rpc.model.RebalanceResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "com.huigod.namenode.rpc.NameNodeService", "rebalance"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.RebalanceRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.huigod.namenode.rpc.model.RebalanceResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("rebalance"))
+                  .build();
+          }
+        }
+     }
+     return getRebalanceMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -475,6 +571,27 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getGetDataNodeForFileMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void reallocateDataNode(com.huigod.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getReallocateDataNodeMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void chooseDataNodeFromReplicas(com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getChooseDataNodeFromReplicasMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void rebalance(com.huigod.namenode.rpc.model.RebalanceRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.RebalanceResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getRebalanceMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -554,6 +671,27 @@ public final class NameNodeServiceGrpc {
                 com.huigod.namenode.rpc.model.GetDataNodeForFileRequest,
                 com.huigod.namenode.rpc.model.GetDataNodeForFileResponse>(
                   this, METHODID_GET_DATA_NODE_FOR_FILE)))
+          .addMethod(
+            getReallocateDataNodeMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.ReallocateDataNodeRequest,
+                com.huigod.namenode.rpc.model.ReallocateDataNodeResponse>(
+                  this, METHODID_REALLOCATE_DATA_NODE)))
+          .addMethod(
+            getChooseDataNodeFromReplicasMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+                com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>(
+                  this, METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS)))
+          .addMethod(
+            getRebalanceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.huigod.namenode.rpc.model.RebalanceRequest,
+                com.huigod.namenode.rpc.model.RebalanceResponse>(
+                  this, METHODID_REBALANCE)))
           .build();
     }
   }
@@ -663,6 +801,30 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void reallocateDataNode(com.huigod.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getReallocateDataNodeMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void chooseDataNodeFromReplicas(com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getChooseDataNodeFromReplicasMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void rebalance(com.huigod.namenode.rpc.model.RebalanceRequest request,
+        io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.RebalanceResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getRebalanceMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -758,6 +920,27 @@ public final class NameNodeServiceGrpc {
     public com.huigod.namenode.rpc.model.GetDataNodeForFileResponse getDataNodeForFile(com.huigod.namenode.rpc.model.GetDataNodeForFileRequest request) {
       return blockingUnaryCall(
           getChannel(), getGetDataNodeForFileMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.ReallocateDataNodeResponse reallocateDataNode(com.huigod.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getReallocateDataNodeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse chooseDataNodeFromReplicas(com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getChooseDataNodeFromReplicasMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.huigod.namenode.rpc.model.RebalanceResponse rebalance(com.huigod.namenode.rpc.model.RebalanceRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getRebalanceMethod(), getCallOptions(), request);
     }
   }
 
@@ -866,6 +1049,30 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.ReallocateDataNodeResponse> reallocateDataNode(
+        com.huigod.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getReallocateDataNodeMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> chooseDataNodeFromReplicas(
+        com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getChooseDataNodeFromReplicasMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.huigod.namenode.rpc.model.RebalanceResponse> rebalance(
+        com.huigod.namenode.rpc.model.RebalanceRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getRebalanceMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -879,6 +1086,9 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_REPORT_COMPLETE_STORAGE_INFO = 8;
   private static final int METHODID_INFORM_REPLICA_RECEIVED = 9;
   private static final int METHODID_GET_DATA_NODE_FOR_FILE = 10;
+  private static final int METHODID_REALLOCATE_DATA_NODE = 11;
+  private static final int METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS = 12;
+  private static final int METHODID_REBALANCE = 13;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -940,6 +1150,18 @@ public final class NameNodeServiceGrpc {
         case METHODID_GET_DATA_NODE_FOR_FILE:
           serviceImpl.getDataNodeForFile((com.huigod.namenode.rpc.model.GetDataNodeForFileRequest) request,
               (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.GetDataNodeForFileResponse>) responseObserver);
+          break;
+        case METHODID_REALLOCATE_DATA_NODE:
+          serviceImpl.reallocateDataNode((com.huigod.namenode.rpc.model.ReallocateDataNodeRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ReallocateDataNodeResponse>) responseObserver);
+          break;
+        case METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS:
+          serviceImpl.chooseDataNodeFromReplicas((com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>) responseObserver);
+          break;
+        case METHODID_REBALANCE:
+          serviceImpl.rebalance((com.huigod.namenode.rpc.model.RebalanceRequest) request,
+              (io.grpc.stub.StreamObserver<com.huigod.namenode.rpc.model.RebalanceResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1013,6 +1235,9 @@ public final class NameNodeServiceGrpc {
               .addMethod(getReportCompleteStorageInfoMethod())
               .addMethod(getInformReplicaReceivedMethod())
               .addMethod(getGetDataNodeForFileMethod())
+              .addMethod(getReallocateDataNodeMethod())
+              .addMethod(getChooseDataNodeFromReplicasMethod())
+              .addMethod(getRebalanceMethod())
               .build();
         }
       }

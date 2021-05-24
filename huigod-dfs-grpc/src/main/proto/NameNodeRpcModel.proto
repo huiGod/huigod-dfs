@@ -103,3 +103,29 @@ message GetDataNodeForFileRequest {
 message GetDataNodeForFileResponse {
   string datanodeInfo = 1;
 }
+
+message ReallocateDataNodeRequest {
+  int64 fileSize = 1 ;
+  string excludedDataNodeId = 2;
+}
+
+message ReallocateDataNodeResponse {
+  string datanode = 1;
+}
+
+message ChooseDataNodeFromReplicasRequest {
+  string filename = 1;
+  string excludedDataNodeId = 2;
+}
+
+message ChooseDataNodeFromReplicasResponse {
+  string datanode = 1;
+}
+
+message RebalanceRequest {
+  int32 status = 1;
+}
+
+message RebalanceResponse {
+  int32 status = 1;
+}

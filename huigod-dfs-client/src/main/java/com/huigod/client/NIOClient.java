@@ -21,7 +21,7 @@ public class NIOClient {
   /**
    * 发送文件至dataNode
    */
-  public static void sendFile(String hostname, int nioPort,
+  public Boolean sendFile(String hostname, int nioPort,
       byte[] file, String filename, long fileSize) {
     // 建立一个短连接，发送完一个文件就释放网络连接
     SocketChannel channel = null;
@@ -133,7 +133,8 @@ public class NIOClient {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("readFile is error:", e);
+      return false;
     } finally {
       if (channel != null) {
         try {
@@ -151,6 +152,7 @@ public class NIOClient {
         }
       }
     }
+    return true;
   }
 
   /**

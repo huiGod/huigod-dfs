@@ -7,7 +7,7 @@ import lombok.Data;
  */
 
 @Data
-public class Filename {
+public class FileName {
 
   /**
    * 相对路径名

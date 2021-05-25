@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * 客户端的一个NIOClient，负责跟数据节点进行网络通信
  */
 @Slf4j
-public class NIOClient {
+public class NioClient {
 
   public static final Integer READ_FILE = 2;
 

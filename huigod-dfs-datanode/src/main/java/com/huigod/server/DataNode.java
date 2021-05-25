@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
  * DataNode启动类
  */
 @Slf4j
-public class DataNodeServer {
+public class DataNode {
 
   /**
    * 是否还在运行
@@ -34,7 +34,7 @@ public class DataNodeServer {
   /**
    * 初始化DataNode
    */
-  public DataNodeServer() throws Exception {
+  public DataNode() throws Exception {
     this.shouldRun = true;
     this.nameNodeRpcClient = new NameNodeRpcClient();
     this.storageManager = new StorageManager();
@@ -57,9 +57,9 @@ public class DataNodeServer {
     this.heartbeatManager.start();
 
     //接收客户端连接处理
-    DataNodeNIOServer nioServer = new DataNodeNIOServer(nameNodeRpcClient);
+    NioServer nioServer = new NioServer(nameNodeRpcClient);
+    nioServer.init();
     nioServer.start();
-
   }
 
   /**
@@ -76,7 +76,7 @@ public class DataNodeServer {
   }
 
   public static void main(String[] args) throws Exception {
-    DataNodeServer datanode = new DataNodeServer();
+    DataNode datanode = new DataNode();
     datanode.start();
   }
 }

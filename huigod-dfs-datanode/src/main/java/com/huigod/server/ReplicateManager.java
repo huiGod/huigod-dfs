@@ -19,7 +19,7 @@ public class ReplicateManager {
   /**
    * NIOClient
    */
-  private NIOClient nioClient = new NIOClient();
+  private NioClient nioClient = new NioClient();
 
   private NameNodeRpcClient namenodeRpcClient;
 

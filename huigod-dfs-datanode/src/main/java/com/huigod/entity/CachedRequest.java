@@ -1,15 +1,18 @@
 package com.huigod.entity;
 
+import java.nio.ByteBuffer;
 import lombok.Data;
 
 /**
- * 已缓存文件
+ * 缓存请求数据封装
  */
 @Data
 public class CachedRequest {
 
-  Integer requestType;
-  Filename filename;
-  Long fileLength;
-  Long hasReadFileLength;
+  private Integer requestType;
+  private FileName filename;
+  private Integer filenameLength;
+  private Long fileLength;
+  private ByteBuffer file;
+  private Boolean hasCompletedRead = false;
 }

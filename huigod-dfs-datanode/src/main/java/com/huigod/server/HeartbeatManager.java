@@ -63,7 +63,7 @@ public class HeartbeatManager {
 
                 if(type.equals(COMMAND_REPLICATE)) {
                   replicateManager.addReplicateTask(task);
-                  System.out.println("接收副本复制任务，" + command);
+                  log.info("接收副本复制任务，" + command);
                 } else if(type.equals(COMMAND_REMOVE_REPLICA)) {
                   // 删除副本
                   String filename = task.getString("filename");

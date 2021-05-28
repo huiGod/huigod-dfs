@@ -2,12 +2,14 @@ package com.huigod.manager;
 
 import com.huigod.entity.INode;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * 负责管理内存中的文件目录树的核心组件
  */
 @Data
+@Slf4j
 public class FSDirectory {
 
   /**

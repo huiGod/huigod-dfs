@@ -471,9 +471,12 @@ public class FSNameSystem {
           "当前filesByDatanode为" + filesByDatanode + "，将要以key=" + ip + "-" + hostname + "获取文件列表");
 
       return filesByDatanode.get(ip + "-" + hostname);
+    } catch (Exception e) {
+      log.error("getFilesByDatanode is error:", e);
     } finally {
       replicasLock.readLock().unlock();
     }
+    return null;
   }
 
   /**

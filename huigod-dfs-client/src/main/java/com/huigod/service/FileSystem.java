@@ -1,5 +1,8 @@
 package com.huigod.service;
 
+import com.huigod.entity.FileInfo;
+import com.huigod.entity.Host;
+
 /**
  * 作为文件系统的接口
  */
@@ -22,12 +25,8 @@ public interface FileSystem {
 
   /**
    * 上传文件
-   *
-   * @param file     文件的字节数组
-   * @param filename 文件名
-   * @throws Exception
    */
-  Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
+  Boolean upload(FileInfo fileInfo, ResponseCallback callback) throws Exception;
 
   /**
    * 下载文件
@@ -36,4 +35,13 @@ public interface FileSystem {
    * @throws Exception
    */
   byte[] download(String filename) throws Exception;
+
+  /**
+   * 重试上传文件
+   * @param fileInfo
+   * @param excludedHost
+   * @return
+   * @throws Exception
+   */
+  Boolean retryUpload(FileInfo fileInfo, Host excludedHost) throws Exception;
 }

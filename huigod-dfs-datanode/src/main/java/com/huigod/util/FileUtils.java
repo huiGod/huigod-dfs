@@ -14,7 +14,7 @@ public class FileUtils {
   public static String getAbsoluteFilename(String relativeFilename) throws Exception {
     String[] relativeFilenameSplited = relativeFilename.split("/");
 
-    String dirPath = DataNodeConfig.DATA_DIR;
+    String dirPath = DataNodeConfig.getDataDir();
     for(int i = 0; i < relativeFilenameSplited.length - 1; i++) {
       if(i == 0) {
         continue;

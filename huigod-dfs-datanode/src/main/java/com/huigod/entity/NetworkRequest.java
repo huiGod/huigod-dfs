@@ -52,28 +52,23 @@ public class NetworkRequest {
   /**
    * 从网络连接中读取与解析出来一个请求
    */
-  public void read() {
-    try {
-      Integer requestType;
-      if (cachedRequest.getRequestType() != null) {
-        requestType = cachedRequest.getRequestType();
-      } else {
-        requestType = getRequestType(channel);
-      }
-      if (requestType == null) {
-        return;
-      }
+  public void read() throws Exception {
+    Integer requestType;
+    if (cachedRequest.getRequestType() != null) {
+      requestType = cachedRequest.getRequestType();
+    } else {
+      requestType = getRequestType(channel);
+    }
+    if (requestType == null) {
+      return;
+    }
 
-      log.info("从请求中解析出来请求类型:{}", requestType);
+    log.info("从请求中解析出来请求类型:{}", requestType);
 
-      if (REQUEST_SEND_FILE.equals(requestType)) {
-        handleSendFileRequest(channel, key);
-      } else if (REQUEST_READ_FILE.equals(requestType)) {
-        handleReadFileRequest(channel, key);
-      }
-
-    } catch (Exception e) {
-      log.error("read is error:", e);
+    if (REQUEST_SEND_FILE.equals(requestType)) {
+      handleSendFileRequest(channel, key);
+    } else if (REQUEST_READ_FILE.equals(requestType)) {
+      handleReadFileRequest(channel, key);
     }
   }
 
@@ -115,13 +110,13 @@ public class NetworkRequest {
   private void handleSendFileRequest(SocketChannel channel, SelectionKey key) throws Exception {
     // 从请求中解析文件名
     FileName filename = getFilename(channel);
-    System.out.println("从网络请求中解析出来文件名：" + filename);
+    log.info("从网络请求中解析出来文件名：" + filename);
     if (filename == null) {
       return;
     }
     // 从请求中解析文件大小
     Long fileLength = getFileLength(channel);
-    System.out.println("从网络请求中解析出来文件大小：" + fileLength);
+    log.info("从网络请求中解析出来文件大小：" + fileLength);
     if (fileLength == null) {
       return;
     }
@@ -140,10 +135,10 @@ public class NetworkRequest {
       fileBuffer.rewind();
       cachedRequest.setFile(fileBuffer);
       cachedRequest.setHasCompletedRead(true);
-      System.out.println("本次文件上传请求读取完毕.......");
+      log.info("本次文件上传请求读取完毕.......");
     } else {
       cachedFileBuffer = fileBuffer;
-      System.out.println("本次文件上传出现拆包问题，缓存起来，下次继续读取.......");
+      log.info("本次文件上传出现拆包问题，缓存起来，下次继续读取.......");
       return;
     }
   }
@@ -238,7 +233,7 @@ public class NetworkRequest {
   private String getAbsoluteFilename(String relativeFilename) throws Exception {
     String[] relativeFilenameSplited = relativeFilename.split("/");
 
-    String dirPath = DataNodeConfig.DATA_DIR;
+    String dirPath = DataNodeConfig.getDataDir();
     for (int i = 0; i < relativeFilenameSplited.length - 1; i++) {
       if (i == 0) {
         continue;
@@ -299,7 +294,7 @@ public class NetworkRequest {
     // 从请求中解析文件名
     // 已经是：F:\\development\\tmp1\\image\\product\\iphone.jpg
     FileName filename = getFilename(channel);
-    System.out.println("从网络请求中解析出来文件名：" + filename);
+    log.info("从网络请求中解析出来文件名：" + filename);
     if (filename == null) {
       return;
     }

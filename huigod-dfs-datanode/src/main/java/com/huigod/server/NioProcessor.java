@@ -1,9 +1,11 @@
 package com.huigod.server;
 
+import com.huigod.config.DataNodeConfig;
 import com.huigod.entity.NetworkRequest;
 import com.huigod.entity.NetworkRequestQueue;
 import com.huigod.entity.NetworkResponse;
 import com.huigod.entity.NetworkResponseQueues;
+import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -114,7 +116,7 @@ public class NioProcessor extends Thread {
     NetworkResponseQueues responseQueues = NetworkResponseQueues.get();
     NetworkResponse response;
 
-    while((response = responseQueues.poll(processorId)) != null) {
+    while ((response = responseQueues.poll(processorId)) != null) {
       String client = response.getClient();
       cachedResponses.put(client, response);
       //客户端连接关注OP_WRITE发送响应
@@ -135,48 +137,68 @@ public class NioProcessor extends Thread {
 
       Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
       while (keyIterator.hasNext()) {
-        SelectionKey key = keyIterator.next();
-        keyIterator.remove();
+        try {
+          SelectionKey key = keyIterator.next();
+          keyIterator.remove();
 
-        SocketChannel channel = (SocketChannel) key.channel();
-        String client = channel.getRemoteAddress().toString();
+          SocketChannel channel = (SocketChannel) key.channel();
 
-        // 客户端发送请求处理
-        if (key.isReadable()) {
-          NetworkRequest request;
-          if (cachedRequests.get(client) != null) {
-            request = cachedRequests.get(client);
-          } else {
-            request = new NetworkRequest();
+          String client = channel.getRemoteAddress().toString();
+
+          // 客户端发送请求处理
+          if (key.isReadable()) {
+            log.info("准备读取请求：" + DataNodeConfig.getDataDir());
+
+            NetworkRequest request;
+            if (cachedRequests.get(client) != null) {
+              request = cachedRequests.get(client);
+            } else {
+              request = new NetworkRequest();
+              request.setChannel(channel);
+              request.setKey(key);
+            }
+            log.info("准备读取请求：" + request);
+
+            try {
+              request.read();
+            } catch (Exception e) {
+              log.error("read is error:", e);
+              cachedRequests.remove(client);
+
+              key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
+              continue;
+            }
+
+            if (request.hasCompletedRead()) {
+              // 此时就可以将一个请求分发到全局的请求队列里去了
+              request.setProcessorId(processorId);
+              request.setClient(client);
+              NetworkRequestQueue.get().offer(request);
+
+              cachedKeys.put(client, key);
+              cachedRequests.remove(client);
+
+              key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
+            } else {
+              //如果请求未完成，缓存后，仍然关注着OP_READ事件，下一次继续处理
+              cachedRequests.put(client, request);
+            }
+          } else if (key.isWritable()) {
+            //发送给客户端响应处理
+            NetworkResponse response = cachedResponses.get(client);
+            try {
+              channel.write(response.getBuffer());
+            } catch (IOException e) {
+              log.error("write is error:", e);
+            }
+
+            cachedResponses.remove(client);
+            cachedKeys.remove(client);
+
+            key.interestOps(SelectionKey.OP_READ);
           }
-
-          request.setChannel(channel);
-          request.setKey(key);
-          request.read();
-
-          if (request.hasCompletedRead()) {
-            // 此时就可以将一个请求分发到全局的请求队列里去了
-            request.setProcessorId(processorId);
-            request.setClient(client);
-            NetworkRequestQueue.get().offer(request);
-
-            cachedKeys.put(client, key);
-            cachedRequests.remove(client);
-
-            key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
-          } else {
-            //如果请求未完成，缓存后，仍然关注着OP_READ事件，下一次继续处理
-            cachedRequests.put(client, request);
-          }
-        } else if (key.isWritable()) {
-          //发送给客户端响应处理
-          NetworkResponse response = cachedResponses.get(client);
-          channel.write(response.getBuffer());
-
-          cachedResponses.remove(client);
-          cachedKeys.remove(client);
-
-          key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+        } catch (Exception e) {
+          log.error("poll exception is error:", e);
         }
       }
     } catch (Exception e) {

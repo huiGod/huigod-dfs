@@ -71,16 +71,16 @@ public class IoThread extends Thread {
           request.getCachedRequest().getFilename().getAbsoluteFilename());
       localFileChannel = localFileOut.getChannel();
       localFileChannel.position(localFileChannel.position());
-      System.out.println("对本地磁盘文件定位到position=" + localFileChannel.size());
+      log.info("对本地磁盘文件定位到position=" + localFileChannel.size());
 
       int written = localFileChannel.write(request.getCachedRequest().getFile());
-      System.out.println("本次文件上传完毕，将" + written + " bytes的数据写入本地磁盘文件.......");
+      log.info("本次文件上传完毕，将" + written + " bytes的数据写入本地磁盘文件.......");
 
       //增量上报Master节点
       nameNode.informReplicaReceived(
           request.getCachedRequest().getFilename().getRelativeFilename() + "_" + request
               .getCachedRequest().getFileLength());
-      System.out.println("增量上报收到的文件副本给NameNode节点......");
+      log.info("增量上报收到的文件副本给NameNode节点......");
 
       // 封装响应，放入到processor对应的响应队列
       NetworkResponse response = new NetworkResponse();
@@ -116,7 +116,7 @@ public class IoThread extends Thread {
           8 + Integer.parseInt(String.valueOf(fileLength)));
       buffer.putLong(fileLength);
       int hasReadImageLength = localFileChannel.read(buffer);
-      System.out.println("从本次磁盘文件中读取了" + hasReadImageLength + " bytes的数据");
+      log.info("从本次磁盘文件中读取了" + hasReadImageLength + " bytes的数据");
 
       buffer.rewind();
 

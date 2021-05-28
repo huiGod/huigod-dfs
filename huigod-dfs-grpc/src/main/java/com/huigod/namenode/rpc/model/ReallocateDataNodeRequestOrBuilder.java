@@ -24,4 +24,16 @@ public interface ReallocateDataNodeRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getExcludedDataNodeIdBytes();
+
+  /**
+   * <code>string fileName = 3;</code>
+   * @return The fileName.
+   */
+  String getFileName();
+  /**
+   * <code>string fileName = 3;</code>
+   * @return The bytes for fileName.
+   */
+  com.google.protobuf.ByteString
+      getFileNameBytes();
 }

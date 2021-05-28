@@ -37,9 +37,9 @@ public class NameNodeRpcClient {
    */
   public Boolean register() throws Exception {
     RegisterRequest request = RegisterRequest.newBuilder()
-        .setIp(DataNodeConfig.DATANODE_IP)
-        .setHostName(DataNodeConfig.DATANODE_HOSTNAME)
-        .setNioPort(DataNodeConfig.NIO_PORT)
+        .setIp(DataNodeConfig.getNioIpp())
+        .setHostName(DataNodeConfig.getNioHostname())
+        .setNioPort(DataNodeConfig.getNioPort())
         .build();
     RegisterResponse response = nameNode.register(request);
 
@@ -52,12 +52,12 @@ public class NameNodeRpcClient {
    * 发送心跳
    */
   public HeartbeatResponse heartbeat() {
-    log.info("datanode发送心跳，ip:{},hostname:{},port:{}", DataNodeConfig.DATANODE_IP,
-        DataNodeConfig.DATANODE_HOSTNAME, DataNodeConfig.NIO_PORT);
+    //log.info("datanode发送心跳，ip:{},hostname:{},port:{}", DataNodeConfig.getNioIpp(),
+    //    DataNodeConfig.getNioHostname(), DataNodeConfig.getNioPort());
     HeartbeatRequest request = HeartbeatRequest.newBuilder()
-        .setIp(DataNodeConfig.DATANODE_IP)
-        .setHostName(DataNodeConfig.DATANODE_HOSTNAME)
-        .setNioPort(DataNodeConfig.NIO_PORT)
+        .setIp(DataNodeConfig.getNioIpp())
+        .setHostName(DataNodeConfig.getNioHostname())
+        .setNioPort(DataNodeConfig.getNioPort())
         .build();
     return nameNode.heartbeat(request);
   }
@@ -74,8 +74,8 @@ public class NameNodeRpcClient {
     }
 
     ReportCompleteStorageInfoRequest request = ReportCompleteStorageInfoRequest.newBuilder()
-        .setIp(DataNodeConfig.DATANODE_IP)
-        .setHostName(DataNodeConfig.DATANODE_HOSTNAME)
+        .setIp(DataNodeConfig.getNioIpp())
+        .setHostName(DataNodeConfig.getNioHostname())
         .setFilenames(JSONArray.toJSONString(storageInfo.getFilenames()))
         .setStoredDataSize(storageInfo.getStoredDataSize())
         .build();
@@ -93,8 +93,8 @@ public class NameNodeRpcClient {
    */
   public void informReplicaReceived(String filename) throws Exception {
     InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder()
-        .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
-        .setIp(DataNodeConfig.DATANODE_IP)
+        .setHostname(DataNodeConfig.getNioHostname())
+        .setIp(DataNodeConfig.getNioIpp())
         .setFileName(filename)
         .build();
     nameNode.informReplicaReceived(request);

@@ -107,6 +107,7 @@ message GetDataNodeForFileResponse {
 message ReallocateDataNodeRequest {
   int64 fileSize = 1 ;
   string excludedDataNodeId = 2;
+  string fileName = 3 ;
 }
 
 message ReallocateDataNodeResponse {

@@ -70,7 +70,7 @@ public class DataNodeManager {
       return false;
     }
     datanode.setLatestHeartbeatTime(System.currentTimeMillis());
-    log.info("DataNode发送心跳：ip={},hostName={}", ip, hostName);
+    //log.info("DataNode发送心跳：ip={},hostName={}", ip, hostName);
     return true;
   }
 
@@ -177,6 +177,8 @@ public class DataNodeManager {
   private void createLostReplicaTask(DataNodeInfo deadDatanode) {
     List<String> files = nameSystem.getFilesByDatanode(
         deadDatanode.getIp(), deadDatanode.getHostname());
+
+    log.info("数据节点:{}，包含的文件数为:{}", deadDatanode.getHostname(), files.size());
 
     for (String file : files) {
       String filename = file.split("_")[0];
@@ -339,7 +341,7 @@ public class DataNodeManager {
 
             if (!toRemoveDataNodes.isEmpty()) {
               for (DataNodeInfo toRemoveDatanode : toRemoveDataNodes) {
-                log.info("数据节点【" + toRemoveDatanode + "】宕机，需要 进行副本复制......");
+                log.info("数据节点【" + toRemoveDatanode + "】宕机，需要进行副本复制......");
                 //创建副本复制任务
                 createLostReplicaTask(toRemoveDatanode);
                 dataNodes.remove(toRemoveDatanode.getId());

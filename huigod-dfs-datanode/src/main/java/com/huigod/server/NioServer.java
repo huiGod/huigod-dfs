@@ -51,10 +51,10 @@ public class NioServer extends Thread {
 
       ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
       serverSocketChannel.configureBlocking(false);
-      serverSocketChannel.socket().bind(new InetSocketAddress(DataNodeConfig.NIO_PORT), 100);
+      serverSocketChannel.socket().bind(new InetSocketAddress(DataNodeConfig.getNioPort()), 100);
       serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-      log.info("NioServer已经启动，开始监听端口：{}", DataNodeConfig.NIO_PORT);
+      log.info("NioServer已经启动，开始监听端口：{}", DataNodeConfig.getNioPort());
 
       NetworkResponseQueues responseQueues = NetworkResponseQueues.get();
 

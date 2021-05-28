@@ -192,17 +192,17 @@ public final class NameNodeRpcModel {
       "ReplicaReceivedResponse\022\016\n\006status\030\001 \001(\005\"" +
       "-\n\031GetDataNodeForFileRequest\022\020\n\010fileName" +
       "\030\001 \001(\t\"2\n\032GetDataNodeForFileResponse\022\024\n\014" +
-      "datanodeInfo\030\001 \001(\t\"I\n\031ReallocateDataNode" +
+      "datanodeInfo\030\001 \001(\t\"[\n\031ReallocateDataNode" +
       "Request\022\020\n\010fileSize\030\001 \001(\003\022\032\n\022excludedDat" +
-      "aNodeId\030\002 \001(\t\".\n\032ReallocateDataNodeRespo" +
-      "nse\022\020\n\010datanode\030\001 \001(\t\"Q\n!ChooseDataNodeF" +
-      "romReplicasRequest\022\020\n\010filename\030\001 \001(\t\022\032\n\022" +
-      "excludedDataNodeId\030\002 \001(\t\"6\n\"ChooseDataNo" +
-      "deFromReplicasResponse\022\020\n\010datanode\030\001 \001(\t" +
-      "\"\"\n\020RebalanceRequest\022\016\n\006status\030\001 \001(\005\"#\n\021" +
-      "RebalanceResponse\022\016\n\006status\030\001 \001(\005B3\n\035com" +
-      ".huigod.namenode.rpc.modelB\020NameNodeRpcM" +
-      "odelP\001b\006proto3"
+      "aNodeId\030\002 \001(\t\022\020\n\010fileName\030\003 \001(\t\".\n\032Reall" +
+      "ocateDataNodeResponse\022\020\n\010datanode\030\001 \001(\t\"" +
+      "Q\n!ChooseDataNodeFromReplicasRequest\022\020\n\010" +
+      "filename\030\001 \001(\t\022\032\n\022excludedDataNodeId\030\002 \001" +
+      "(\t\"6\n\"ChooseDataNodeFromReplicasResponse" +
+      "\022\020\n\010datanode\030\001 \001(\t\"\"\n\020RebalanceRequest\022\016" +
+      "\n\006status\030\001 \001(\005\"#\n\021RebalanceResponse\022\016\n\006s" +
+      "tatus\030\001 \001(\005B3\n\035com.huigod.namenode.rpc.m" +
+      "odelB\020NameNodeRpcModelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -345,7 +345,7 @@ public final class NameNodeRpcModel {
     internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_huigod_namenode_rpc_ReallocateDataNodeRequest_descriptor,
-        new String[] { "FileSize", "ExcludedDataNodeId", });
+        new String[] { "FileSize", "ExcludedDataNodeId", "FileName", });
     internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_com_huigod_namenode_rpc_ReallocateDataNodeResponse_fieldAccessorTable = new

@@ -72,7 +72,7 @@ public class NioClient {
 
             channel.write(readFileRequest);
 
-            System.out.println("发送文件下载的请求过去......");
+            log.info("发送文件下载的请求过去......");
 
             key.interestOps(SelectionKey.OP_READ);
           }
@@ -88,7 +88,7 @@ public class NioClient {
               if (!fileLengthBuffer.hasRemaining()) {
                 fileLengthBuffer.rewind();
                 fileLength = fileLengthBuffer.getLong();
-                System.out.println("从服务端返回数据中解析文件大小：" + fileLength);
+                log.info("从服务端返回数据中解析文件大小：" + fileLength);
               }
             }
 
@@ -98,12 +98,12 @@ public class NioClient {
                     Integer.valueOf(String.valueOf(fileLength)));
               }
               int hasRead = channel.read(fileBuffer);
-              System.out.println("从服务端读取了" + hasRead + " bytes的数据出来到内存中");
+              log.info("从服务端读取了" + hasRead + " bytes的数据出来到内存中");
 
               if (!fileBuffer.hasRemaining()) {
                 fileBuffer.rewind();
                 file = fileBuffer.array();
-                System.out.println("最终获取到的文件的大小为" + file.length + " bytes");
+                log.info("最终获取到的文件的大小为" + file.length + " bytes");
                 reading = false;
               }
             }

@@ -17,7 +17,7 @@ public class StorageManager {
   public StorageInfo getStorageInfo() {
     StorageInfo storageInfo = new StorageInfo();
 
-    File dataDir = new File(DataNodeConfig.DATA_DIR);
+    File dataDir = new File(DataNodeConfig.getDataDir());
     File[] children = dataDir.listFiles();
     if(children == null || children.length == 0) {
       return null;
@@ -37,7 +37,7 @@ public class StorageManager {
   private void scanFiles(File dir, StorageInfo storageInfo) {
     if(dir.isFile()) {
       String path = dir.getPath();
-      path = path.substring(DataNodeConfig.DATA_DIR.length());
+      path = path.substring(DataNodeConfig.getDataDir().length());
       // \image\product\iphone.jpg
       // /image/product/iphone.jpg
       path = path.replace("\\", "/");

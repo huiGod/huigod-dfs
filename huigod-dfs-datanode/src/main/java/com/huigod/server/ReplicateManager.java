@@ -65,7 +65,7 @@ public class ReplicateManager {
             continue;
           }
 
-          System.out.println("开始执行副本复制任务......");
+          log.info("开始执行副本复制任务......");
 
           // 解析复制任务
           String filename = replicateTask.getString("filename");
@@ -78,18 +78,18 @@ public class ReplicateManager {
           // 跟源头数据接头通信读取图片过来
           byte[] file = nioClient.readFile(hostname, nioPort, filename);
           ByteBuffer fileBuffer = ByteBuffer.wrap(file);
-          System.out.println("从源头数据节点读取到图片，大小为：" + file.length + "字节");
+          log.info("从源头数据节点读取到图片，大小为：" + file.length + "字节");
 
           // 根据文件的相对路径定位到绝对路径，写入本地磁盘文件中
           String absoluteFilename = FileUtils.getAbsoluteFilename(filename);
           imageOut = new FileOutputStream(absoluteFilename);
           imageChannel = imageOut.getChannel();
           imageChannel.write(fileBuffer);
-          System.out.println("将图片写入本地磁盘文件，路径为：" + absoluteFilename);
+          log.info("将图片写入本地磁盘文件，路径为：" + absoluteFilename);
 
           // 进行增量上报
           namenodeRpcClient.informReplicaReceived(filename + "_" + fileLength);
-          System.out.println("向Master节点进行增量上报......");
+          log.info("向Master节点进行增量上报......");
         } catch (Exception e) {
           log.error("ReplicateWorker is error:", e);
         } finally {

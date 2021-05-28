@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.util.Objects;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,7 +63,6 @@ public class NetworkRequest {
     if (requestType == null) {
       return;
     }
-
     log.info("从请求中解析出来请求类型:{}", requestType);
 
     if (REQUEST_SEND_FILE.equals(requestType)) {
@@ -89,7 +89,11 @@ public class NetworkRequest {
       requestTypeBuffer = ByteBuffer.allocate(4);
     }
 
-    channel.read(requestTypeBuffer);
+    int readLength = channel.read(requestTypeBuffer);
+
+    if (Objects.equals(-1, readLength)) {
+      throw new RuntimeException("异常空请求");
+    }
 
     if (!requestTypeBuffer.hasRemaining()) {
       requestTypeBuffer.rewind();

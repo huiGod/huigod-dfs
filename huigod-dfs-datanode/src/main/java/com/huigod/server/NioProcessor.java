@@ -147,7 +147,7 @@ public class NioProcessor extends Thread {
 
           // 客户端发送请求处理
           if (key.isReadable()) {
-            log.info("准备读取请求：" + DataNodeConfig.getDataDir());
+            log.info("准备读取请求目录:{}", DataNodeConfig.getDataDir());
 
             NetworkRequest request;
             if (cachedRequests.get(client) != null) {
@@ -157,7 +157,6 @@ public class NioProcessor extends Thread {
               request.setChannel(channel);
               request.setKey(key);
             }
-            log.info("准备读取请求：" + request);
 
             try {
               request.read();
